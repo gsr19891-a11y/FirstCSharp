@@ -8,6 +8,8 @@
 
             Console.WriteLine("firs C#");
 
+            Console.WriteLine("second C#");
+
 
 
 
