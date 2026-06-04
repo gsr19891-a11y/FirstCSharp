@@ -7,7 +7,7 @@
             //leqcia2
 
             //davaleba 1
-
+            /*
             Console.WriteLine("Welcome to the online elections! Enter your age to participate in the elections:");
 
             byte age;
@@ -30,6 +30,64 @@
             {
                 Console.WriteLine("Error! Incorrect age!");
             }
+            */
+
+
+            //davaleba 2
+            /*
+            Console.WriteLine("Enter First Number:");
+            bool isFirstNumberValid = int.TryParse(Console.ReadLine(), out int firstNumber);
+
+
+            Console.WriteLine("Enter Second Number:");
+            bool isSecondNumberValid = int.TryParse(Console.ReadLine(), out int secondNumber);
+
+
+            Console.WriteLine("Enter Third Number:");
+            bool isThirdNumberValid = int.TryParse(Console.ReadLine(), out int thirdNumber);
+
+
+
+            if (isFirstNumberValid && isSecondNumberValid && isThirdNumberValid){
+
+                int max = Math.Max(firstNumber, Math.Max(secondNumber,thirdNumber));
+
+                Console.WriteLine($"The maximum number is:{max}");
+            }
+            else
+            {
+                Console.WriteLine("Error! Invalid input. Please enter valid integers.");
+            }
+
+            */
+
+            //davaleba 3
+
+            Console.WriteLine("Enter First Number");
+            bool firstNumValid = int.TryParse(Console.ReadLine(), out int firstNum);
+
+            Console.WriteLine("Enter Second Number");
+            bool secondNumValid = int.TryParse(Console.ReadLine(), out int secondNum);
+
+            int result;
+
+
+            if (firstNumValid && secondNumValid && firstNum != secondNum)
+            {
+                Console.WriteLine($"Result:{result = firstNum + secondNum}");
+
+            }
+            else if (firstNum == secondNum)
+            {
+                Console.WriteLine($"Result:{result = firstNum * secondNum * 3}");
+            }
+            else
+            {
+                Console.WriteLine("Error! Invalid input. Please enter valid integers.");
+            }
+
+
+
 
         }
     }
