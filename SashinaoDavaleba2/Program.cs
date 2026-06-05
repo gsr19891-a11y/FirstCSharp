@@ -63,6 +63,9 @@
 
             //davaleba 3
 
+
+            /*
+
             Console.WriteLine("Enter First Number");
             bool firstNumValid = int.TryParse(Console.ReadLine(), out int firstNum);
 
@@ -85,6 +88,64 @@
             {
                 Console.WriteLine("Error! Invalid input. Please enter valid integers.");
             }
+
+            */
+
+            //davaleba 4
+
+            /*
+            Console.WriteLine("Запшите вашу температуру:");
+            bool isTemperatureValid = double.TryParse(Console.ReadLine(), out double temperature);
+
+            if (isTemperatureValid && temperature >= 36.0 && temperature <= 37.0)
+            {
+                Console.WriteLine("У вас нормальная температура!");
+            }else if(isTemperatureValid && temperature > 37.0)
+            {
+                Console.WriteLine("У вас повышенная температура!");
+            }else if(isTemperatureValid && temperature < 36.0)
+            {
+                Console.WriteLine("У вас пониженная температура!");
+            }
+            else
+            {
+                Console.WriteLine("Error!");
+            }
+
+            */
+
+
+
+            //davaleba 5
+            /*
+
+            Console.WriteLine("Введите первое число:");
+            bool isFirstValid = int.TryParse(Console.ReadLine(),out int firstNum);
+
+            Console.WriteLine("Введите второе число:");
+            bool isSecondValid = int.TryParse(Console.ReadLine(), out int secondNum);
+
+            Console.WriteLine("Введите третье число:");
+            bool isThirdValid = int.TryParse(Console.ReadLine(), out int thirdNum);
+
+            int min;
+
+
+            if(isFirstValid && isSecondValid && isThirdValid)
+            {
+                min = Math.Min(firstNum, Math.Min(secondNum, thirdNum));
+                Console.WriteLine($"Минимальное число:{min}");
+            }
+            else
+            {
+                Console.WriteLine("error nums!");
+                return;
+            }
+
+            */
+
+
+
 
 
 

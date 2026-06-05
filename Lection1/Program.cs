@@ -37,6 +37,13 @@
             Console.WriteLine("Hello, " + userName);
 
 
+            Console.WriteLine("enter your age");
+
+            char opperator = 'a';
+            char opperator2 = 'B';
+
+            bool isTrue = true;
+
 
 
 
