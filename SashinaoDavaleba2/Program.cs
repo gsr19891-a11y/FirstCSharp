@@ -35,6 +35,7 @@
 
             //davaleba 2
             /*
+             * 
             Console.WriteLine("Enter First Number:");
             bool isFirstNumberValid = int.TryParse(Console.ReadLine(), out int firstNumber);
 

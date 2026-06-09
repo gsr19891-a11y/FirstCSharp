@@ -1,5 +1,8 @@
 <Solution>
   <Project Path="Lection1/Lection1.csproj" />
-  <Project Path="Leqcia2/Leqcia2.csproj" Id="74188d5d-2d8e-4f80-86b9-1d94f00444b2" />
-  <Project Path="SashinaoDavaleba2/SashinaoDavaleba2.csproj" Id="1a25ec56-441a-4551-8e25-3a17aa5793b9" />
+  <Project Path="Lection3-SashinaoDavaleba/Lection3-SashinaoDavaleba.csproj" Id="a69b0b16-83e1-4431-a84d-a182d43b7632" />
+  <Project Path="Lection3/Lection3.csproj" Id="ae4717ad-36f1-47ae-95a1-d6ab50f8fcc1" />
+  <Project Path="Lection4/Lection4.csproj" Id="34b84c49-292b-413a-9a6d-67b414464e33" />
+  <Project Path="Leqcia2/Lection2.csproj" Id="74188d5d-2d8e-4f80-86b9-1d94f00444b2" />
+  <Project Path="SashinaoDavaleba2/Lection2-SashinaoDavaleba.csproj" Id="1a25ec56-441a-4551-8e25-3a17aa5793b9" />
 </Solution>
