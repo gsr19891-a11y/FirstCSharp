@@ -153,7 +153,7 @@ namespace Lection4
 
             foreach (var item in arr)
             {
-                Console.WriteLine(item);
+                //Console.WriteLine(item);
                 
             }
 
@@ -161,6 +161,83 @@ namespace Lection4
 
 
 
+            //davaleba 1 
+
+            /*
+            for (int i = 1; i < 10; i++)
+            {
+                for (int j = 2; j < 10; j++)
+                {
+                    Console.WriteLine($"{i} * {j} = {i * j }");
+            
+                }
+                Console.WriteLine();
+
+            }
+            */
+
+            //davaleba 2
+
+            /*
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    Console.Write("*");
+                }
+
+                Console.WriteLine();
+
+            }
+            */
+
+
+            //davaleba 3 
+
+            /*
+
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if((i + j) % 2 == 0)
+                    {
+                        Console.Write("X");
+                    }
+                    else
+                    {
+                        Console.Write("O");
+                    }
+                    
+                }
+                Console.WriteLine();
+
+            }
+            */
+
+            //davlaeba 4
+
+            /*
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 12; j++)
+                {
+                    if( i == 0 || j == 0 || i == 5 || j == 11)
+                    {
+                        Console.Write("*");
+                    }
+                    else
+                    {
+                        Console.Write(" ");
+                    }
+
+
+                }
+               
+                Console.WriteLine();
+            }
+            */
 
 
 
