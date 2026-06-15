@@ -520,17 +520,95 @@ averageSum = averageSum / point;
             }
 
 
+
+            //13
+
+            int[] arr = [1, 2, 3, 4, 5, 6];
+
+            int sum = 0;
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i] % 2 == 0)
+                {
+                    sum += arr[i];
+                }
+                
+            }
+
+            Console.WriteLine(sum);
+ 
+
+
+            //14
+
+            string str = "hello world";
+
+            int count = 0;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == 'l')
+                {
+                    count ++;
+                }
+                
+            }
+
+            Console.WriteLine(count);
+
+
+            
+            //15
+            int[] arr = [10, 20, 30, 40, 50];
+            int[] newArr = new int[arr.Length];
+
+            for (int i = arr.Length - 1, j = 0; i >= 0; i--, j++)
+            {
+                newArr[j] = arr[i];
+            }
+
+            Console.WriteLine(string.Join(", ", newArr));
+
+            //16
+
+            int[] arr = [2, 4, 6, 8, 10];
+
+            int[] newArr = new int[arr.Length];
+
+            for (int i = arr.Length - 1, j = 0; i >= 0; i--, j++)
+            {
+                newArr[j] = arr[i];
+                
+            }Console.WriteLine(string.Join("-", newArr));
+
+         
+            //17
+
+            string str = "csharp";
+
+            char[] newStr = new char[str.Length] ;
+
+            for (int i = str.Length -1, j = 0; i >=0; i--, j++)
+            {
+                newStr[j] = str[i];
+                
+            }
+            Console.WriteLine(string.Join("", newStr));
+
+
+            //18
+
+            int[] arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+            int[] newArr = new int[arr.Length];
+
+            for (int i = arr.Length -1, j =0; i >= 0; i--, j++)
+            {
+                newArr[j] = arr[i];
+                
+            }Console.WriteLine(string.Join("-", newArr));
  */
-
-
-
-
-
-
-
-
-
-
 
 
 
