@@ -76,8 +76,8 @@
 
             int[] arr = [12, -1, 22, -51, -9, 50, 60, 11, 23];
 
-            int max = arr[0];
-            int min = arr[0];
+            int max = arr[0];//int.MinValue
+            int min = arr[0];//int.MaxValue
 
             for (int i = 0; i < arr.Length; i++)
             {
@@ -91,6 +91,7 @@
                 }
 
             }
+
 
             Console.WriteLine($"min num: {min}");
             Console.WriteLine($"max num: {max}");
@@ -361,7 +362,7 @@ averageSum = averageSum / point;
 
             }
 
-            Console.WriteLine($"Студент {bestStudent + 1} набрал больше всего баллов: {maxSum}");
+           
 
 
 
@@ -369,8 +370,8 @@ averageSum = averageSum / point;
 
             //7
             int[][] arr = new int[][] {
-    new int[] { 8, 3, 6 }, // четные: 8, 6. Всего: 2.
-    new int[] { 9, 5, 2 }  // четные: 2. Всего: 1.
+    new int[] { 8, 3, 6 }, 
+    new int[] { 9, 5, 2 } 
 };
 
 
@@ -393,8 +394,8 @@ averageSum = averageSum / point;
             //8
 
             int[][] arr = new int[][] {
-    new int[] { 4, 9, 2, 7 }, // мин: 2, макс: 9
-    new int[] { 10, 6, 8 }    // мин: 6, макс: 10
+    new int[] { 4, 9, 2, 7 }, 
+    new int[] { 10, 6, 8 }    
 };
 
 
@@ -609,6 +610,28 @@ averageSum = averageSum / point;
                 
             }Console.WriteLine(string.Join("-", newArr));
  */
+
+
+            int[] arr = [12, -1, 22, -51, -9, 50, 60, 11, 23];
+
+            Array.Sort(arr);//ალაგებს
+            Array.Reverse(arr);
+
+            foreach (var item in arr)
+            {
+                 Console.WriteLine(item);
+            }
+           
+
+
+
+
+
+
+
+
+
+
 
 
 

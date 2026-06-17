@@ -7,6 +7,8 @@
   <Project Path="Lection5_LoopsForr/Lection5_LoopsArr.csproj" Id="2c0ba62e-f5c0-4077-ac42-e571fa8286bf" />
   <Project Path="Lection6-SashinaoDavaleba/Lection6-SashinaoDavaleba.csproj" Id="76c7f4e6-45c0-4a00-99a5-ef4561883d8c" />
   <Project Path="Lection6/Lection6.csproj" Id="e4cd406b-5480-413d-982c-d5a84d023f21" />
+  <Project Path="Lection7-SashinaoDavaleba/Lection7-SashinaoDavaleba.csproj" Id="c4cba1b0-ea71-48f0-b2c9-ae5934f0f137" />
+  <Project Path="Lection7/Lection7.csproj" Id="15521c88-96db-4f46-9b73-75e100278f42" />
   <Project Path="Leqcia2/Lection2.csproj" Id="74188d5d-2d8e-4f80-86b9-1d94f00444b2" />
   <Project Path="SashinaoDavaleba2/Lection2-SashinaoDavaleba.csproj" Id="1a25ec56-441a-4551-8e25-3a17aa5793b9" />
 </Solution>
