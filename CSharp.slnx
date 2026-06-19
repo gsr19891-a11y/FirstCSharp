@@ -9,6 +9,9 @@
   <Project Path="Lection6/Lection6.csproj" Id="e4cd406b-5480-413d-982c-d5a84d023f21" />
   <Project Path="Lection7-SashinaoDavaleba/Lection7-SashinaoDavaleba.csproj" Id="c4cba1b0-ea71-48f0-b2c9-ae5934f0f137" />
   <Project Path="Lection7/Lection7.csproj" Id="15521c88-96db-4f46-9b73-75e100278f42" />
+  <Project Path="Lection8-Davalebebi2/Lection8-Davalebebi2.csproj" Id="b9044733-426c-4119-8e3c-22cce3e9725a" />
+  <Project Path="Lection8-SashinaoDavaleba/Lection8-SashinaoDavaleba.csproj" Id="75843712-86b0-4d0c-b924-026a25c683af" />
+  <Project Path="Lection8_Clasebi/Lection8_Clasebi.csproj" Id="52b4ac8c-88fe-4086-9a7a-a1b53fd18d6f" />
   <Project Path="Leqcia2/Lection2.csproj" Id="74188d5d-2d8e-4f80-86b9-1d94f00444b2" />
   <Project Path="SashinaoDavaleba2/Lection2-SashinaoDavaleba.csproj" Id="1a25ec56-441a-4551-8e25-3a17aa5793b9" />
 </Solution>
