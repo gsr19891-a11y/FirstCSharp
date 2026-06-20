@@ -9,7 +9,7 @@
             Random rand = new();
             Product[] producs = [product];
 
-
+            
 
             product.Id = rand.Next(1, 100);
 
@@ -39,11 +39,68 @@
             {
                 Console.WriteLine(item.ToString());
             }
+            
 
 
 
             //Countdown(4);
             Sum(3);
+
+            Book book = new Book
+            {
+                Id = 1,
+                Title = "Csharp code",
+                Author = "Bajadze",
+                Pages = 400,
+                Price = 40,
+                Avialable = true,
+            };
+
+            book.GetInfo();
+            book.ApplyDiscount(20);
+            book.Borrow();
+
+            Console.WriteLine(book.Price);
+
+
+            List<Car> cars = new List<Car>
+{
+    new Car
+    {
+        Brand = "Mercedes",
+        Model = "W211",
+        Year = 2005,
+        Fuel = 10,
+        Speed = 0,
+        isStarted = false
+    },
+
+    new Car
+    {
+        Brand = "BMW",
+        Model = "F30",
+        Year = 2015,
+        Fuel = 50,
+        Speed = 0,
+        isStarted = false
+    }
+};
+
+            foreach (var item in cars)
+            {
+                Console.WriteLine(item.Brand);
+            }
+
+            Car myCar = new Car();
+
+
+            myCar.StartEngine();
+            myCar.Refuel(15);
+            myCar.Accelerate(120);
+
+
+
+
 
 
         }
@@ -67,6 +124,7 @@
 
         */
         //2
+
 
 
         static int Sum(int n)
@@ -126,6 +184,73 @@
     }
 
 
+    public class Book
+    {
+        public int Id;
+        public string Title;
+        public string Author;
+        public int Pages;
+        public double Price;
+        public bool Avialable;
+
+        public void GetInfo()
+        {
+            Console.WriteLine($"Title:{Title}, Author: {Author}, Price: {Price}.");
+
+        }
+        public double ApplyDiscount(double percent)
+        {
+            Price -= Price * percent / 100;
+            return Price;
+        }
+        public bool Borrow()
+        {
+
+            return Avialable = false;
+        }
+        public bool ReturnBook()
+        {
+            return Avialable = true;
+        }
+    }
+
+    public class Car
+    {
+        public string Brand { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; }
+        public int Fuel { get; set; }
+        public int Speed { get; set; }
+        public bool isStarted { get; set; }
+
+        public bool StartEngine()
+        {
+            return isStarted = true;
+        }
+
+        public bool StopEngine()
+        {
+            return isStarted = false;
+        }
+
+        public int Accelerate(byte speed)
+        {
+            return Speed = speed;
+        }
+
+        public int Brake(byte speed)
+        {
+            return Speed = 0;
+        }
+
+        public int Refuel(int fuel)
+        {
+            return Fuel += fuel;
+
+        }
+
+
+    }
 
 
 
