@@ -6,10 +6,10 @@ namespace Lecture9_SashinaoDavaleba
 {
     internal class Appliances
     {
-        public string Type;
-        public string Brand;
-        public string Model;
-        public bool HasWifi;
+        public string Type { get; set; }
+        public string Brand { get; set; }
+        public string Model { get; set; }
+        public bool HasWifi { get; set; }
 
 
         private int _price;
@@ -44,6 +44,44 @@ namespace Lecture9_SashinaoDavaleba
         {
             return $"Type:{Type}, Brand: {Brand}, Model:{Model}, Price: {Price}$, Power Usage: {PowerUsage}, Has WiFi: {HasWifi}.";
         }
+
+
+
+        public double GetMonthlyElectricityCost(double pricePerKwh)
+        {
+            if (pricePerKwh < 0)
+            {
+                return 0;
+            }
+
+            double power = (PowerUsage / 1000) * 60;
+            return power * pricePerKwh;
+        }
+
+        public bool IsEnergyEfficient()
+        {
+            if (PowerUsage < 1000)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool ToggleWifi()
+        {
+            return HasWifi = !HasWifi;
+        }
+
+
+        public void ApplyDiscount(int percent)
+        {
+            if (percent < 0 || percent > 100) { return; }
+
+            double discount = Price * (percent / 100.0);
+
+            Price = Price - (int)discount;
+        }
+
 
     }
 }
