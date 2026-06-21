@@ -1,0 +1,10 @@
+Refrigerator,Samsung,RF28,1200,150,true
+WashingMachine,LG,WD10,800,2000,true
+Microwave,Bosch,MW20,150,800,false
+Dishwasher,Whirlpool,DW45,600,1200,true
+VacuumCleaner,Dyson,V15,700,500,false
+AirConditioner,Daikin,AC30,1100,1500,true
+CoffeeMachine,DeLonghi,Magnifica,450,1450,false
+Toaster,Philips,T20,50,900,false
+Oven,Samsung,OV60,900,2500,true
+Blender,Braun,B5,120,600,false

@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-       
 
-            //string pasth = "C:\\Users\\Giorg\\Desktop\\C#\\CSharp\\Lecture9-SashinaoDavaleba\\CarsData.txt";
+
+            #region cars
 
             string path = @"../../../CarsData.txt";
 
@@ -26,7 +26,7 @@
                 carsItem.Price = int.Parse(parts[3]);
                 carsItem.Color = parts[4];
 
-                carsItem.CheckCar();
+                //carsItem.CheckCar();
                 
                 
 
@@ -38,13 +38,42 @@
             }
             foreach (var item in elcar)
             {
-                Console.WriteLine(item.ToString());
+                //Console.WriteLine(item.ToString());
 
                 
                 
             }
 
-            
+            #endregion
+
+
+            string path1 = "../../../AppliancesData.txt";
+            string[] lines1 = File.ReadAllLines(path1);
+            Appliances[] tech = new Appliances[lines1.Length];
+
+            int i = 0;
+            foreach (string line in lines1)
+            {
+                
+
+                string[] parts = line.Split(",");
+
+                Appliances appliance = new Appliances();
+                appliance.Type = parts[0];
+                appliance.Brand = parts[1];
+                appliance.Model = parts[2];
+                appliance.Price = int.Parse(parts[3]);
+                appliance.PowerUsage = int.Parse(parts[4]);
+                appliance.HasWifi = bool.Parse(parts[5]);
+
+
+                tech[i] = appliance;
+                i++;
+
+                Console.WriteLine(appliance.ToString());
+
+               
+            }
 
 
         }
