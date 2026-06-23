@@ -48,7 +48,7 @@
 
 
             string path1 = "../../../AppliancesData.txt";
-            string[] lines1 = File.ReadAllLines(path1);
+            string[] lines1 = File.ReadAllLines(path1); //მთლიან ფაილს კითხულობს. // stream reader
             Appliances[] tech = new Appliances[lines1.Length];
 
             int i = 0;
