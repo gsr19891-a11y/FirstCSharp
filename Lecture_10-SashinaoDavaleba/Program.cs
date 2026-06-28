@@ -24,13 +24,53 @@ namespace Lecture_10_SashinaoDavaleba
 
             Employ.FindCountry(Country.Georgia, employs);
 
-            
+
+
+            Enemy enemy = new Enemy();
+            enemy.Name = "Iani";
+            enemy.Damage = 300;
+            enemy.HP = 5;
+            enemy.X = 40;
+            enemy.Y = 150;
+
+
+            Enemy enemy1 = new Enemy();
+            enemy1.Name = "Iani1";
+            enemy1.Damage = 200;
+            enemy1.HP = 5;
+            enemy1.X = 40;
+            enemy1.Y = 150;
+
+
+            Console.WriteLine(enemy.CompareTo(enemy1));
+
+            Player player = new Player();
+            player.Name = "Iani";
+            player.Score = 0;
+            player.HP = 3;
+            player.X = 40;
+            player.Y = 150;
+
+            //player.Inventory = [new Gun("AK47", 30), new Gun("M4", 25)];
 
 
 
+            Food food = new Food();
+            food.Name = "testFood";
+            food.Heal = 10;
+            food.X = 40;
+            food.Y = 150;
 
+            Console.WriteLine(player.HP);
+
+            food.Eat(player);
+
+            Console.WriteLine(player.HP);
 
 
         }
     }
 }
+
+//როგორია ტიპი - კალსი(აღწერა)
+//რა შეუძლია - ინტერფეისი(ქონტრაქტი)
