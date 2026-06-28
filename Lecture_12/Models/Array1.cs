@@ -12,6 +12,8 @@ namespace Lecture_12.Models
             Collection = collection;
         }
 
+      
+
         public int[] Collection {  get; set; }
 
         public void ShowEven()
