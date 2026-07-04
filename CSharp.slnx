@@ -18,7 +18,12 @@
   <Project Path="Lecture9-SashinaoDavaleba/Lecture9-SashinaoDavaleba.csproj" Id="79306750-5c38-47d9-8855-ffef5142947a" />
   <Project Path="Lecture_10-SashinaoDavaleba/Lecture_10-SashinaoDavaleba.csproj" Id="3f5cdeff-b2c0-4880-acdf-699c6919bd59" />
   <Project Path="Lecture_11-SashinaoDavaleba/Lecture_11-SashinaoDavaleba.csproj" Id="f8abf231-2814-4533-82c2-f9b68a76a51f" />
+  <Project Path="Lecture_12-AisDavalebebi/Lecture_12-AisDavalebebi.csproj" Id="e38dbb16-f6a0-438f-8e68-30c37535aaa0" />
+  <Project Path="Lecture_12-SashinaoDavaleba/Lecture_12-SashinaoDavaleba.csproj" Id="5fbee248-c679-4995-bf55-ce340b3d7d74" />
   <Project Path="Lecture_12/Lecture_12.csproj" Id="404812ac-4e94-44b3-a95e-578fc76df169" />
+  <Project Path="Lecture_13-SashinaoDavaleba/Lecture_13-SashinaoDavaleba.csproj" Id="71b53510-6dfc-4fba-81a4-67af52b5b5ca" />
+  <Project Path="Lecture_13/Lecture_13.csproj" Id="55fc20e8-9488-428b-8937-3310873c2407" />
+  <Project Path="Lecture_14/Lecture_14.csproj" Id="6e79277c-ed87-4700-b11a-6b562d403c0a" />
   <Project Path="Leqcia2/Lecture2.csproj" Id="74188d5d-2d8e-4f80-86b9-1d94f00444b2" />
   <Project Path="SashinaoDavaleba2/Lecture2-SashinaoDavaleba.csproj" Id="1a25ec56-441a-4551-8e25-3a17aa5793b9" />
 </Solution>
