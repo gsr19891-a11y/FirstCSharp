@@ -10,7 +10,7 @@ namespace Lecture_14.Exeption
         {
         }
 
-        public InvalidExeption(string message, Exception innerException) : base(message, innerException)
+        public InvalidExeption(string message) : base("invalid rame")
         {
         }
     }

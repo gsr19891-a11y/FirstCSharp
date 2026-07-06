@@ -17,6 +17,10 @@
                 Console.WriteLine("hI");
 
             }
+            finally
+            {
+                Console.WriteLine("All correect");
+            }
 
 
 
