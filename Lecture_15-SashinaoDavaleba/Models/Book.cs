@@ -20,5 +20,14 @@ namespace Lecture_15_SashinaoDavaleba.Models
         {
             return $"Title: {Title}, Author: {Author}";
         }
+
+
+
+        public void Print()
+        {
+            Console.WriteLine($"Title: {Title}, Author: {Author}");
+        }
+
+
     }
 }

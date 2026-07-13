@@ -72,10 +72,10 @@ namespace Lecture_15
 
             List<Money> moneyList = new List<Money>();
 
-            Money money1 = new Money() { Currency = "USD", Amount = 100 };
-            Money money2 = new Money() { Currency = "USD", Amount = 350 };
+            //Money money1 = new Money() { Currency = "USD", Amount = 100 };
+            //Money money2 = new Money() { Currency = "USD", Amount = 350 };
 
-            moneyList.AddRange(money1, money2);
+            //moneyList.AddRange(money1, money2);
 
             moneyList.Sort();
             moneyList.Reverse();

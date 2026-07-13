@@ -22,13 +22,26 @@ namespace Lecture_15_SashinaoDavaleba
 
             Console.WriteLine($"Books Count: {myLibrary.Count()}");
 
+
             foreach (var item in myLibrary)
             {
                 Console.WriteLine(item);
 
             }
 
-            myLibrary.RemoveAt(2);
+
+
+            try
+            {
+                myLibrary.RemoveAt(2);
+
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+
+
+
 
 
             myLibrary.Clear();
