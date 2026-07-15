@@ -30,7 +30,9 @@
   <Project Path="Lecture_16-SashinaoDavaleba/Lecture_16-SashinaoDavaleba.csproj" Id="bc113bdb-e442-4e0e-994d-87cae4455270" />
   <Project Path="Lecture_16/Lecture_16.csproj" Id="6232a38f-4f41-44b8-96c0-575055b0b2b2" />
   <Project Path="Lecture_17/Lecture_17.csproj" Id="ebb22ff5-408e-4759-b953-af7e30721dec" />
+  <Project Path="Lecture_18-SashinaoDavaleba/Lecture_18-SashinaoDavaleba.csproj" Id="357de141-1af0-4ee0-a8df-13d6be90b120" />
   <Project Path="Lecture_18/Lecture_18.csproj" Id="9153185d-e57f-4552-82e2-d3d0b3346e83" />
   <Project Path="Leqcia2/Lecture2.csproj" Id="74188d5d-2d8e-4f80-86b9-1d94f00444b2" />
+  <Project Path="Practiculi/Practiculi.csproj" Id="c513acab-b356-42cf-90ee-c269ab8ca6fa" />
   <Project Path="SashinaoDavaleba2/Lecture2-SashinaoDavaleba.csproj" Id="1a25ec56-441a-4551-8e25-3a17aa5793b9" />
 </Solution>
