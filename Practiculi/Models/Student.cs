@@ -27,17 +27,43 @@ namespace Practiculi.Models
         public Faculty Faculty { get; set; }
 
 
+
+
+
+
+
+
+
+        public override bool Equals(object? obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public void Print()
         {
             Console.WriteLine(this);
         }
 
+
+
+
+
+
+
+
+
+
         public override string? ToString()
         {
-            return $"Name: {Name}, GPA: {GPA}, Faculty: {Faculty}";
+            return $"Name: {Name},Last Name: {LastName} GPA: {GPA}, Faculty: {Faculty}";
         }
 
-        int IComparable<Student>.CompareTo(Student? other)
+        public int CompareTo(Student? other)
         {
 
                      //1      //0        //-1
@@ -46,41 +72,41 @@ namespace Practiculi.Models
 
 
 
-        public static bool operator > (Student student, Student other)
-        {
-            if(student.GPA > other.GPA)
-            {
-                return true ;
-            }
-            return false;
-        }
+        //public static bool operator > (Student student, Student other)
+        //{
+        //    if(student.GPA > other.GPA)
+        //    {
+        //        return true ;
+        //    }
+        //    return false;
+        //}
 
-        public static bool operator < (Student student,  Student other)
-        {
-            if (student.GPA < other.GPA)
-            {
-                return true;
-            }
-            return false;
-        }
+        //public static bool operator < (Student student,  Student other)
+        //{
+        //    if (student.GPA < other.GPA)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
-        public static bool operator == (Student student, Student other)
-        {
-            if (student.GPA == other.GPA)
-            {
-                return true;
-            }
-            return false;
-        }
+        //public static bool operator == (Student student, Student other)
+        //{
+        //    if (student.GPA == other.GPA)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
-        public static bool operator !=(Student student, Student other)
-        {
-            if (student.GPA != other.GPA)
-            {
-                return true;
-            }
-            return false;
-        }
+        //public static bool operator !=(Student student, Student other)
+        //{
+        //    if (student.GPA != other.GPA)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
 
 

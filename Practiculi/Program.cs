@@ -1,4 +1,5 @@
 ﻿using Practiculi.Models;
+using Practiculi.Sevices;
 
 namespace Practiculi
 {
@@ -7,19 +8,71 @@ namespace Practiculi
         static void Main(string[] args)
         {
 
-            List<Student> students = new List<Student>
-{
-    new Student { Name = "George", LastName = "Beridze", Age = 20, Email = "g.beridze@example.com", Faculty = Enums.Faculty.It, Number = "+995555112233", GPA = 3.8 },
-    new Student { Name = "Nino", LastName = "Kapanadze", Age = 21, Email = "n.kapanadze@example.com", Faculty = Enums.Faculty.Bussiness, Number = "+995555445566", GPA = 3.9 },
-    new Student { Name = "Luka", LastName = "Masurashvili", Age = 19, Email = "l.masurashvili@example.com", Faculty =Enums.Faculty.Marceting, Number = "+995555778899", GPA = 3.2 },
-    new Student { Name = "Maria", LastName = "Ivanova", Age = 22, Email = "m.ivanova@example.com", Faculty = Enums.Faculty.Bussiness, Number = "+995555114477", GPA = 3.5 },
-    new Student { Name = "Alexander", LastName = "Smirnov", Age = 20, Email = "a.smirnov@example.com", Faculty = Enums.Faculty.Marceting, Number = "+995555225588", GPA = 2.8 },
-    new Student { Name = "Ana", LastName = "Baratamidze", Age = 21, Email = "a.baratamidze@example.com", Faculty = Enums.Faculty.Bussiness, Number = "+995555336699", GPA = 3.7 },
-    new Student { Name = "David", LastName = "Kvirikashvili", Age = 23, Email = "d.kvirikashvili@example.com", Faculty = Enums.Faculty.Marceting, Number = "+995555998877", GPA = 4.0 },
-    new Student { Name = "Elena", LastName = "Kuznetsova", Age = 19, Email = "e.kuznetsova@example.com", Faculty = Enums.Faculty.It, Number = "+995555665544", GPA = 3.1 },
-    new Student { Name = "Teimuraz", LastName = "Shengelia", Age = 22, Email = "t.shengelia@example.com", Faculty = Enums.Faculty.Marceting, Number = "+995555332211", GPA = 3.4 },
-    new Student { Name = "Sophia", LastName = "Dias", Age = 20, Email = "s.dias@example.com", Faculty = Enums.Faculty.Bussiness, Number = "+995555775533", GPA = 3.6 }
-};
+            //List<Student> students = StudentService.GetStudents();
+          
+
+
+            //while (true)
+            //{
+            //    Console.WriteLine("enter 1 - to view student");
+            //    Console.WriteLine("enter 2 - to search best student");
+            //    Console.WriteLine("enter 3 - to GPA calculate");
+            //    Console.WriteLine("enter 4 - to to search student");
+            //    Console.WriteLine("enter 5 - to students filter by GPA");
+            //    Console.WriteLine("enter 6 - to add new student");
+            //    Console.WriteLine("enter 7 - to delete student");
+            //    Console.WriteLine("enter 8 - to exit");
+
+
+
+            //    string choose = Console.ReadLine();
+
+            //    switch (choose)
+            //    {
+            //        case "1":
+            //            foreach (var student in students)
+            //            {
+            //                Console.WriteLine(student);
+
+            //            }
+
+            //        break;
+
+            //        case "2":
+            //            double maxGpa = 0;
+            //            Student? bestStudent = null;
+
+            //            foreach (var item in students)
+            //            {
+
+
+            //                if (item.GPA > maxGpa)
+            //                {
+            //                    maxGpa = item.GPA;
+            //                    bestStudent = item;
+
+            //                }
+
+
+            //            }
+            //            if(bestStudent != null)
+            //            {
+            //                Console.WriteLine($"Best student: {bestStudent.Name}, GPA: {bestStudent.GPA}");
+            //            }
+
+            //        break;
+
+            //    }
+            //}
+
+
+
+            Menu.SelectMenuOptions();
+
+
+
+
+
 
         }
     }
