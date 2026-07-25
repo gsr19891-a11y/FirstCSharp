@@ -1,0 +1,1 @@
+{"Id":1,"Name":"Giorgi","Age":22,"Email":"gsr19891@gmail.com","Password":"$2a$11$ZU5wPMj5d.zE3LIzri9gIezcNMUWchoB8EFEkbjYvPcMEkW5REx5m","VerificationCode":"4746","IsVerified":true,"Subjects":[{"Id":1,"Title":"Math","Grade":3},{"Id":2,"Title":"Science","Grade":5}],"Gender":0,"Title":null,"Grade":0}
