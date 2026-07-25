@@ -1,4 +1,10 @@
 <Solution>
+  <Folder Name="/Lecture23_sashinao/">
+    <Project Path="L23.Core/L23.Core.csproj" Id="bb857589-27dd-4cf6-9be2-bfa0159ec35a" />
+    <Project Path="L23.Infastructure/L23.Infastructure.csproj" Id="cf65c362-4f0e-4439-9600-b55b0e008fde" />
+    <Project Path="L23.Services/L23.Services.csproj" Id="850e296e-7277-4e49-adf6-81862595c4be" />
+    <Project Path="L23.UI/L23.UI.csproj" Id="48feeec9-adcf-470f-90bf-0cef0adf412b" />
+  </Folder>
   <Folder Name="/Uni/">
     <Project Path="Uni.Core/Uni.Core.csproj" Id="c37df4e1-a002-4e0b-a638-c70ecea39095" />
     <Project Path="Uni.Infastructure/Uni.Infastructure.csproj" Id="b9df12b8-9a35-4e05-824f-59fef73ccd5b" />

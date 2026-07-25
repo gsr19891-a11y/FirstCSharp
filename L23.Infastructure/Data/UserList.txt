@@ -1,0 +1,1 @@
+{"Id":2,"Name":"Giorgi","Role":0,"Email":"gsr19891@gmail.com","Password":"$2a$11$t8bVIpSADi2GZa4cZ42g2O52KwAAqLxDBrEOA0pyhIOYfcDBTmEaW","IsVerfyed":true,"VerificationCode":"5958"}
