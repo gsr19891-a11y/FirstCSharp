@@ -1,6 +1,7 @@
 ﻿using ATM.Core.Enums;
 using ATM.Core.Interfaces;
 using ATM.Core.Models;
+using BCrypt.Net;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,7 +12,10 @@ namespace ATM.Infrastructure.Repositories
     public class FileUserRepository : IUserRepository
     {
 
-        private const string FilePath = "C:\\Users\\Giorg\\Desktop\\C#\\CSharp\\ATM.Infrastructure\\Data\\Users.txt";
+        private const string FilePath = @"../../../../ATM.Infrastructure/Data/Users.txt";
+
+
+
 
         public List<User> GetAll()
         {
@@ -19,9 +23,9 @@ namespace ATM.Infrastructure.Repositories
 
             if (!File.Exists(FilePath))
             {
-                users.Add(new AdminUser(1002, "admin_giorgi", "secureAdmin", 0.00m, LoanStatus.None, 0.00m));
-                users.Add(new ClientUser(1001, "alex99", "pass123", 550.50m, LoanStatus.Pending, 200.00m));
-                users.Add(new ClientUser(1003, "nino_k", "koba777", 1200.00m, LoanStatus.Approved, 500.00m));
+                users.Add(new AdminUser(1002, "admin_giorgi", BCrypt.Net.BCrypt.HashPassword("secureAdmin"), "admin@atm.ge", "3333", 0.00m, LoanStatus.None, 0.00m));
+                users.Add(new ClientUser(1001, "alex99", BCrypt.Net.BCrypt.HashPassword("pass123"), "alex@gmail.com","1234", 550.50m, LoanStatus.Pending, 200.00m));
+                users.Add(new ClientUser(1003, "nino_k", BCrypt.Net.BCrypt.HashPassword("koba777"), "nino@gmail.com","2222", 1200.00m, LoanStatus.Approved, 500.00m));
                 SaveAll(users);
                 return users;
             }
@@ -37,20 +41,51 @@ namespace ATM.Infrastructure.Repositories
 
                     string[] parts = line.Split('|');
 
-                    if (parts.Length >= 7)
+                    if (parts.Length >= 9)
                     {
                         int id = int.Parse(parts[0].Trim());
                         string username = parts[1].Trim();
                         string password = parts[2].Trim();
-                        Enum.TryParse(parts[3].Trim(), true, out UserRole role);
-                        decimal balance = decimal.Parse(parts[4].Trim(), CultureInfo.InvariantCulture);
-                        Enum.TryParse(parts[5].Trim(), true, out LoanStatus loanStatus);
-                        decimal loanAmount = decimal.Parse(parts[6].Trim(), CultureInfo.InvariantCulture);
+                        string email = parts[3].Trim();
+                        string code = parts[4].Trim();
+                        Enum.TryParse(parts[5].Trim(), true, out UserRole role);
+                        decimal balance = decimal.Parse(parts[6].Trim(), CultureInfo.InvariantCulture);
+                        Enum.TryParse(parts[7].Trim(), true, out LoanStatus loanStatus);
+                        decimal loanAmount = decimal.Parse(parts[8].Trim(), CultureInfo.InvariantCulture);
+                        bool isVerified = parts.Length >= 10 && bool.TryParse(parts[9].Trim(), out bool parsedIsVerified) && parsedIsVerified;
 
                         if (role == UserRole.Admin)
-                            users.Add(new AdminUser(id, username, password, balance, loanStatus, loanAmount));
+                        {
+                            var admin = new AdminUser(
+                                id,
+                                username,
+                                password,
+                                email,
+                                code,
+                                balance,
+                                loanStatus,
+                                loanAmount);
+
+                            admin.IsVerfyed = isVerified;
+
+                            users.Add(admin);
+                        }
                         else
-                            users.Add(new ClientUser(id, username, password, balance, loanStatus, loanAmount));
+                        {
+                            var client = new ClientUser(
+                                id,
+                                username,
+                                password,
+                                email,
+                                code,
+                                balance,
+                                loanStatus,
+                                loanAmount);
+
+                            client.IsVerfyed = isVerified;
+
+                            users.Add(client);
+                        }
                     }
                 }
             }
@@ -65,11 +100,10 @@ namespace ATM.Infrastructure.Repositories
 
 
 
-        public User GetByUsernameAndPassword(string username, string password)
+        public User GetByUsername(string username)
         {
             return GetAll().FirstOrDefault(u =>
-                u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) &&
-                u.Password == password);
+                u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
         }
 
 
@@ -86,12 +120,19 @@ namespace ATM.Infrastructure.Repositories
         {
             try
             {
+                var directory = Path.GetDirectoryName(FilePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
                 using (var writer = new StreamWriter(FilePath, false))
                 {
-                    writer.WriteLine("// ID | Username | Password | Role | Balance | LoanStatus | LoanAmount");
+              
+                    writer.WriteLine("// ID | Username | Password | Email | Code | Role | Balance | LoanStatus | LoanAmount | IsVerfyed");
                     foreach (var u in users)
                     {
-                        writer.WriteLine($"{u.Id} | {u.Username} | {u.Password} | {u.Role} | {u.Balance.ToString("F2", CultureInfo.InvariantCulture)} | {u.LoanStatus} | {u.LoanAmount.ToString("F2", CultureInfo.InvariantCulture)}");
+                        writer.WriteLine($"{u.Id} | {u.Username} | {u.Password} | {u.Email} | {u.VerificationCode} | {u.Role} | {u.Balance.ToString("F2", CultureInfo.InvariantCulture)} | {u.LoanStatus} | {u.LoanAmount.ToString("F2", CultureInfo.InvariantCulture)} | {u.IsVerfyed}");
                     }
                 }
             }
@@ -103,7 +144,11 @@ namespace ATM.Infrastructure.Repositories
 
 
 
-
+        public User GetByEmail(string email)
+        {
+            return GetAll().FirstOrDefault(u =>
+                u.Email != null && u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        }
 
 
 

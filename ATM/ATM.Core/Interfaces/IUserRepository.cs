@@ -8,7 +8,8 @@ namespace ATM.Core.Interfaces
     public interface IUserRepository
     {
         List<User> GetAll();
-        User GetByUsernameAndPassword(string username, string password);
+        User GetByUsername(string username);
+        User GetByEmail(string email);
         void Add(User user);
         void SaveAll(List<User> users);
     }

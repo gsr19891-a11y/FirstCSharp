@@ -1,4 +1,5 @@
-﻿using ATM.Core.Models;
+﻿using ATM.Core.Enums;
+using ATM.Core.Models;
 using ATM.Services;
 using System;
 using System.Collections.Generic;
@@ -70,15 +71,52 @@ namespace ATM.UI.Services
         private void Register()
         {
             Console.Clear();
+            Console.WriteLine("=== NEW USER REGISTRATION ===");
             Console.Write("Input Username: ");
             string u = Console.ReadLine()?.Trim();
+
+            Console.Write("Input Email: ");
+            string e = Console.ReadLine()?.Trim();
+
             Console.Write("Input Password: ");
             string p = Console.ReadLine()?.Trim();
 
+            var newClient = new ClientUser(
+                id: 0,
+                username: u,
+                password: p,
+                email: e,
+                code: null, 
+                balance: 0.00m,
+                loanStatus: LoanStatus.None,
+                loanAmount: 0.00m
+            );
+
             try
             {
-                var newClient = _atmService.RegisterClient(u, p);
-                Console.WriteLine($"Registration Succsess! Your ID: {newClient.Id}");
+                _atmService.RegisterClient(newClient);
+                Console.WriteLine("\n[Success] Registration completed!");
+                Console.WriteLine($"Verification code sent to email: {e}");
+
+                
+                PromptVerification(e);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+        }
+
+
+        private void PromptVerification(string email)
+        {
+            Console.Write("\nEnter verification code from email: ");
+            string code = Console.ReadLine()?.Trim();
+
+            try
+            {
+                _atmService.VerifyUser(email, code);
+                Console.WriteLine("\n[Success] Email verified successfully! Now you can login.");
             }
             catch (Exception ex)
             {
@@ -87,7 +125,14 @@ namespace ATM.UI.Services
             Pause();
         }
 
-
+        private void VerifyCodeManual()
+        {
+            Console.Clear();
+            Console.WriteLine("=== MANUAL EMAIL VERIFICATION ===");
+            Console.Write("Enter Email: ");
+            string email = Console.ReadLine()?.Trim();
+            PromptVerification(email);
+        }
 
 
 
@@ -197,7 +242,7 @@ namespace ATM.UI.Services
                 case "3":
                     Console.WriteLine("\n=== ALL USERS ===");
                     foreach (var u in _atmService.GetAllUsers())
-                        Console.WriteLine($"ID: {u.Id} | Username: {u.Username} | Role: {u.Role} | Balance: {u.Balance:F2}");
+                        Console.WriteLine($"ID: {u.Id} | Username: {u.Username} | Email: {u.Email} | Role: {u.Role} | Balance: {u.Balance:F2}");
                     Pause();
                     break;
                 case "0":

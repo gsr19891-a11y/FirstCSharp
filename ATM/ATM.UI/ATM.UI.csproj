@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ATM.Core\ATM.Core.csproj" />
     <ProjectReference Include="..\ATM.Infrastructure\ATM.Infrastructure.csproj" />
     <ProjectReference Include="..\ATM.Services\ATM.Services.csproj" />

@@ -2,6 +2,7 @@
 using ATM.Core.Exceptions;
 using ATM.Core.Interfaces;
 using ATM.Core.Models;
+using BCrypt.Net;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,63 +21,264 @@ namespace ATM.Services
 
         public User Login(string username, string password)
         {
-            var user = _userRepository.GetByUsernameAndPassword(username, password);
-
-            if (user == null)
+      
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
                 throw new UserNotFoundException("Invalid username or password.");
             }
 
+            var user = _userRepository.GetByUsername(username);
+
+    
+            if (user == null || string.IsNullOrEmpty(user.Password) || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                throw new  UserNotFoundException("Invalid username or password.");
+            }
+
+
+            if (!user.IsVerfyed) 
+            {
+                throw new UserNotVerify("User is not verified!");
+            }
+
+
+            SendEmailLoginNotification(user.Email);
             return user;
+
+
+
         }
 
 
 
-        public ClientUser RegisterClient(string username, string password)
+
+        public void RegisterClient(ClientUser user)
         {
             var users = _userRepository.GetAll();
-            if (users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
 
+   
+            if (users.Any(u => u.Username.Equals(user.Username, StringComparison.OrdinalIgnoreCase)))
                 throw new UserAlreadyExistsException("Username is already taken.");
 
+     
+            if (users.Any(u => u.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
+                throw new UserAlreadyExistsException("Email is already registered.");
 
-            int newId = users.Count > 0 ? users.Max(u => u.Id) + 1 : 1001;
-            var newUser = new ClientUser(newId, username, password, 0.00m, LoanStatus.None, 0.00m);
+           
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-            _userRepository.Add(newUser);
-            return newUser;
+          
+            user.Id = users.Count > 0 ? users.Max(u => u.Id) + 1 : 1001;
+
+         
+            if (string.IsNullOrEmpty(user.VerificationCode))
+            {
+                Random random = new();
+                user.VerificationCode = random.Next(1000, 9999).ToString();
+            }
+
+            if(user.Role == UserRole.Client)
+            {
+user.IsVerfyed = false;
+            }
+            else
+            {
+                user.IsVerfyed = true;
+            }
+            
+
+            _userRepository.Add(user);
+
+
+            
+            EmailService.SendEmail(user.Email, "Email Verification", $"Your verification code is: {user.VerificationCode}");
+
+
+
         }
+
+
+        private void SendEmailLoginNotification(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return;
+
+            try
+            {
+                EmailService.SendEmail(
+                    email,
+                    "Login Successful",
+                    $"You have successfully logged into your account."
+                );
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"[Warning] Failed to send email to {email}: {ex.Message}");
+            }
+        }
+
+        private void SendEmailRegisterNotification(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return;
+
+            try
+            {
+                EmailService.SendEmail(
+                    email,
+                    "Register Successful",
+                    $"You have successfully registered your account."
+                );
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"[Warning] Failed to send email to {email}: {ex.Message}");
+            }
+        }
+
+
+
+        public void VerifyUser(string email, string verificationCode)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(verificationCode))
+            {
+                throw new ArgumentException("Email and verification code cannot be empty.");
+            }
+
+            User client = _userRepository.GetByEmail(email);
+
+            if (client == null)
+            {
+                throw new UserNotFoundException("User not found with provided email.");
+            }
+
+            if (client.VerificationCode == null || client.VerificationCode.Trim() != verificationCode.Trim())
+            {
+                throw new UserNotVerify("Invalid verification code.");
+            }
+
+            client.IsVerfyed = true;
+            client.VerificationCode = null;
+
+            SaveChanges(client);
+
+            Console.WriteLine("Verify Successful");
+
+            SendEmailRegisterNotification(email);
+        }
+
 
 
         public void Deposit(User user, decimal amount)
         {
+   
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "User cannot be null.");
+
+            if (amount <= 0)
+                throw new ArgumentException("Deposit amount must be greater than zero.", nameof(amount));
+
             user.Deposit(amount);
             SaveChanges(user);
+
+      
+            SendEmailNotification(user.Email, amount);
         }
 
+        private void SendEmailNotification(string email, decimal amount)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return; 
+
+            try
+            {
+                EmailService.SendEmail(
+                    email,
+                    "Deposit Successful",
+                    $"Your deposit of {amount:F2} GEL was processed successfully."
+                );
+            }
+            catch (Exception ex)
+            {
+          
+                Console.WriteLine($"[Warning] Failed to send email to {email}: {ex.Message}");
+            }
+        }
 
 
         public bool Withdraw(User user, decimal amount)
         {
-          
+     
+            if (user == null)
+                throw new ArgumentNullException(nameof(user), "User cannot be null.");
 
+            if (amount <= 0)
+                throw new ArgumentException("Withdrawal amount must be greater than zero.", nameof(amount));
+
+        
             bool result = user.Withdraw(amount);
-            if (result) SaveChanges(user);
+            if (result)
+            {
+                SaveChanges(user);
+
+         
+                SendEmailLoanNotification(
+                    user.Email,
+                    "Withdrawal Successful",
+                    $"You have successfully withdrawn {amount:F2} GEL. Remaining balance: {user.Balance:F2} GEL"
+                );
+            }
+
             return result;
         }
 
-
-
         public void RequestLoan(ClientUser client, decimal amount)
         {
+      
+            if (client == null)
+                throw new ArgumentNullException(nameof(client), "Client cannot be null.");
+
+            if (amount <= 0)
+                throw new ArgumentException("Loan amount must be greater than zero.", nameof(amount));
+
+   
             if (client.LoanStatus == LoanStatus.Pending)
                 throw new LoanException("You already have a pending loan request.");
 
+            if (client.LoanStatus == LoanStatus.Approved)
+                throw new LoanException("You already have an active loan.");
+
+       
             client.LoanStatus = LoanStatus.Pending;
             client.LoanAmount = amount;
             SaveChanges(client);
+
+    
+            SendEmailLoanNotification(
+                client.Email,
+                "Loan Request Submitted",
+                $"Your loan request for {amount:F2} GEL has been received and is under review."
+            );
         }
 
+   
+        private void SendEmailLoanNotification(string email, string subject, string body)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return;
+
+            try
+            {
+                EmailService.SendEmail(email, subject, body);
+            }
+            catch (Exception ex)
+            {
+   
+                Console.WriteLine($"[Warning] Email notification failed: {ex.Message}");
+            }
+        }
 
 
 
@@ -121,6 +323,12 @@ namespace ATM.Services
                 _userRepository.SaveAll(users);
             }
         }
+
+
+
+
+
+        //jykh phlk swav axhr
 
     }
 }

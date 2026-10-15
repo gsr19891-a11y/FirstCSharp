@@ -9,8 +9,8 @@ namespace ATM.Core.Models
     {
         public override UserRole Role => UserRole.Admin;
 
-        public AdminUser(int id, string username, string password, decimal balance, LoanStatus loanStatus, decimal loanAmount)
-            : base(id, username, password, balance, loanStatus, loanAmount) { }
+        public AdminUser(int id, string username, string password, string email, string code, decimal balance, LoanStatus loanStatus, decimal loanAmount)
+            : base(id, username, password, email, code, balance, loanStatus, loanAmount) { }
 
         public override void DisplayMenu()
         {

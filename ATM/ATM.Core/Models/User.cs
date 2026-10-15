@@ -12,12 +12,15 @@ namespace ATM.Core.Models
         public int Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Email { get; set; }
         public LoanStatus LoanStatus { get; set; }
         public decimal LoanAmount { get; set; }
         public abstract UserRole Role { get; }
 
+
         public bool IsVerfyed { get; set; }
         public string VerificationCode { get; set; }
+
 
 
         public decimal Balance {
@@ -25,11 +28,13 @@ namespace ATM.Core.Models
             protected set => _balance = value;
         }
 
-        protected User(int id, string username, string password, decimal balance, LoanStatus loanStatus, decimal loanAmount)
+        protected User(int id, string username, string password, string email, string verificationCode, decimal balance, LoanStatus loanStatus, decimal loanAmount)
         {
             Id = id;
             Username = username;
             Password = password;
+            Email = email;
+            VerificationCode = verificationCode;
             _balance = balance;
             LoanStatus = loanStatus;
             LoanAmount = loanAmount;

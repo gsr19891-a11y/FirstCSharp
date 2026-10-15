@@ -1,0 +1,4 @@
+// ID | Username | Password | Email | Code | Role | Balance | LoanStatus | LoanAmount | IsVerfyed
+1001 | Admin | $2a$11$TcxfEu0smSXKy7rGH5ZTROOSLPUbKGEz5z3jX7NqQW/X//PmM2DX2 | admin@gmail.com |  | Admin | 0.00 | Rejected | 0.00 | True
+1003 | Adm | $2a$11$nPGEc4lfX7RuXsF9SxzwQOJgFrKwGl6xlGz0huSVxxWuGiXg8MX9W | admi@ruu.f | 7483 | Admin | 0.00 | None | 0.00 | True
+1004 | giorgi | $2a$11$hkWQlrB34PALkZRWPewj1ely8Lpna0vMoCr/SkMh7HnOl/YoDXqOS | gsr19891@gmail.com |  | Client | 6300.00 | Approved | 4500.00 | True
