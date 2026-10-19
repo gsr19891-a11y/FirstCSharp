@@ -1,333 +1,191 @@
-﻿using ATM.Core.Enums;
-using ATM.Core.Exceptions;
+﻿
 using ATM.Services;
 using BankATM.Core.Interfaces;
+using BankATM.Core.Models.DTOs;
 using BankATM.Core.Models.Entities;
 using BCrypt.Net;
 using Step.Domain.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BankATM.Services
 {
     public class BankService
     {
-
         private readonly IUserRepository _userRepository;
-        private readonly EmailService _emailService;
+        private readonly IAccountRepository _accountRepository;
 
-        public BankService(IUserRepository userRepository, EmailService emailService)
+        public BankService(
+            IUserRepository userRepository,
+            IAccountRepository accountRepository)
         {
             _userRepository = userRepository;
-            _emailService = emailService;
+            _accountRepository = accountRepository;
         }
 
-        public BankService(IUserRepository userRepository)
+        // Регистрация клиента
+        public UserDTO Register(RegisterUserDTO dto)
         {
-            _userRepository = userRepository;
-        }
-
-
-
-
-
-        public User Login(string username, string password)
-        {
-            if (string.IsNullOrWhiteSpace(username) ||
-                string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(dto.Username) ||
+                string.IsNullOrWhiteSpace(dto.Password) ||
+                string.IsNullOrWhiteSpace(dto.Email))
             {
-                throw new UserNotFoundException("Invalid username or password.");
+                throw new ArgumentException("All fields are required.");
             }
 
-            var user = _userRepository.GetByUsername(username.Trim());
+            if (_userRepository.GetByUsername(dto.Username) != null)
+                throw new Exception("Username already exists.");
 
-            if (user == null || string.IsNullOrWhiteSpace(user.Password))
-            {
-                throw new UserNotFoundException("Invalid username or password.");
-            }
+            if (_userRepository.GetByEmail(dto.Email) != null)
+                throw new Exception("Email already exists.");
 
-            bool isPasswordValid;
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            try
-            {
-                isPasswordValid = BCrypt.Net.BCrypt.Verify(
-                    password.Trim(),
-                    user.Password.Trim()
-                );
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[BCrypt Error] {ex.Message}");
-                throw new UserNotFoundException("Invalid username or password.");
-            }
+            string verificationCode =
+                Random.Shared.Next(1000, 10000).ToString();
 
-            if (!isPasswordValid)
-            {
-                Console.WriteLine($"[Debug] Password mismatch: {username}");
-                throw new UserNotFoundException("Invalid username or password.");
-            }
+            ClientUser client = new ClientUser(
+                id: 0,
+                username: dto.Username,
+                password: hashedPassword,
+                email: dto.Email,
+                verificationCode: verificationCode,
+                isVerified: false
+            );
 
-            if (!user.IsVerfyed)
-            {
-                throw new UserNotVerify("User is not verified!");
-            }
-
-            SendEmailLoginNotification(user.Email);
-
-            return user;
-        }
-
-
-
-
-        public void RegisterClient(ClientUser user)
-        {
-            var users = _userRepository.GetAll();
-
-            if (users.Any(u =>
-                u.Username.Equals(user.Username, StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new UserAlreadyExistsException("Username is already taken.");
-            }
-
-            if (users.Any(u =>
-                u.Email.Equals(user.Email, StringComparison.OrdinalIgnoreCase)))
-            {
-                throw new UserAlreadyExistsException("Email is already registered.");
-            }
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-            Random random = new Random();
-            user.VerificationCode = random.Next(1000, 10000).ToString();
-
-            user.IsVerfyed = false;
-
-            _userRepository.Add(user);
+            _userRepository.RegisterClient(client);
 
             EmailService.SendEmail(
-                user.Email,
-                "Email Verification",
-                $"Your verification code is: {user.VerificationCode}"
-            );
-        }
-
-
-
-        public void VerifyUser(string email, string verificationCode)
-        {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(verificationCode))
-            {
-                throw new ArgumentException("Email and verification code cannot be empty.");
-            }
-
-            User client = _userRepository.GetByEmail(email);
-
-            if (client == null)
-            {
-                throw new UserNotFoundException("User not found with provided email.");
-            }
-
-            if (client.VerificationCode == null || client.VerificationCode.Trim() != verificationCode.Trim())
-            {
-                throw new UserNotVerify("Invalid verification code.");
-            }
-
-            client.IsVerfyed = true;
-            client.VerificationCode = null;
-
-            SaveChanges(client);
-
-            Console.WriteLine("Verify Successful");
-
-            SendEmailRegisterNotification(email);
-        }
-
-        public void Deposit(User user, decimal amount)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user), "User cannot be null.");
-
-            if (amount <= 0)
-                throw new ArgumentException("Deposit amount must be greater than zero.", nameof(amount));
-
-            user.Deposit(amount);
-            SaveChanges(user);
-
-            SendEmailNotification(user.Email, amount);
-        }
-
-        private void SendEmailNotification(string email, decimal amount)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return;
-
-            try
-            {
-                EmailService.SendEmail(
-                    email,
-                    "Deposit Successful",
-                    $"Your deposit of {amount:F2} GEL was processed successfully."
-                );
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Warning] Failed to send email to {email}: {ex.Message}");
-            }
-        }
-
-        public bool Withdraw(User user, decimal amount)
-        {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user), "User cannot be null.");
-
-            if (amount <= 0)
-                throw new ArgumentException("Withdrawal amount must be greater than zero.", nameof(amount));
-
-            bool result = user.Withdraw(amount);
-            if (result)
-            {
-                SaveChanges(user);
-
-                SendEmailLoanNotification(
-                    user.Email,
-                    "Withdrawal Successful",
-                    $"You have successfully withdrawn {amount:F2} GEL. Remaining balance: {user.Balance:F2} GEL"
-                );
-            }
-
-            return result;
-        }
-
-        public void RequestLoan(ClientUser client, decimal amount)
-        {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client), "Client cannot be null.");
-
-            if (amount <= 0)
-                throw new ArgumentException("Loan amount must be greater than zero.", nameof(amount));
-
-            if (client.LoanStatus == LoanStatus.Pending)
-                throw new LoanException("You already have a pending loan request.");
-
-            if (client.LoanStatus == LoanStatus.Approved)
-                throw new LoanException("You already have an active loan.");
-
-            client.LoanStatus = LoanStatus.Pending;
-            client.LoanAmount = amount;
-            SaveChanges(client);
-
-            SendEmailLoanNotification(
                 client.Email,
-                "Loan Request Submitted",
-                $"Your loan request for {amount:F2} GEL has been received and is under review."
+                "STEP BANK - Email Verification",
+                $"Your verification code is: {client.VerificationCode}"
             );
-        }
 
-        private void SendEmailLoanNotification(string email, string subject, string body)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return;
-
-            try
+            return new UserDTO
             {
-                EmailService.SendEmail(email, subject, body);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Warning] Email notification failed: {ex.Message}");
-            }
+                Id = client.Id,
+                Username = client.Username,
+                Email = client.Email,
+                Role = client.Role,
+                IsVerified = client.IsVerified
+            };
         }
 
-        public List<User> GetPendingLoans()
-        {
-            return _userRepository.GetAll().Where(u => u.LoanStatus == LoanStatus.Pending).ToList();
-        }
 
-        public void ProcessLoan(int userId, bool approve)
+        public ICollection<UserDTO> GetAllUsers()
         {
             var users = _userRepository.GetAll();
-            var user = users.FirstOrDefault(u => u.Id == userId && u.LoanStatus == LoanStatus.Pending);
+
+            return users.Select(user => new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role,
+                IsVerified = user.IsVerified
+            }).ToList();
+        }
+
+
+        // Авторизация
+        public UserDTO Login(LoginUserDTO dto)
+        {
+            var user = _userRepository.GetByUsername(dto.Username);
 
             if (user == null)
-                throw new UserNotFoundException("Such ID Not Found!");
+                throw new Exception("User not found.");
 
-            if (approve)
-            {
-                user.LoanStatus = LoanStatus.Approved;
-                user.Deposit(user.LoanAmount);
-            }
-            else
-            {
-                user.LoanStatus = LoanStatus.Rejected;
-            }
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+                throw new Exception("Incorrect password.");
 
-            _userRepository.SaveAll(users);
+            if (!user.IsVerified)
+                throw new Exception("Please verify your email first.");
+
+            return new UserDTO
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                Role = user.Role,
+                IsVerified = user.IsVerified
+            };
         }
 
-        public List<User> GetAllUsers() => _userRepository.GetAll().ToList();
-
-        private void SaveChanges(User user)
+        // Подтверждение email
+        public void VerifyUser(int userId, string code)
         {
-            var users = _userRepository.GetAll().ToList();
-            var index = users.FindIndex(u => u.Id == user.Id);
-            if (index != -1)
-            {
-                users[index] = user;
-                _userRepository.SaveAll(users);
-            }
+            var user = _userRepository.GetById(userId);
+
+            if (user == null)
+                throw new Exception("User not found.");
+
+            if (user.IsVerified)
+                throw new Exception("User is already verified.");
+
+            if (user.VerificationCode != code)
+                throw new Exception("Invalid verification code.");
+
+            user.IsVerified = true;
+            user.VerificationCode = null;
+
+            _userRepository.Update(user);
         }
 
-
-
-        private void SendEmailLoginNotification(string email)
+        // Получение счёта клиента
+        public AccountDTO GetAccount(int clientId)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                return;
+            var account = _accountRepository.GetByClientId(clientId);
 
-            try
-            {
-                EmailService.SendEmail(
-                    email,
-                    "Login Successful",
-                    $"You have successfully logged into your account."
-                );
-            }
-            catch (Exception ex)
-            {
+            if (account == null)
+                throw new Exception("Account not found.");
 
-                Console.WriteLine($"[Warning] Failed to send email to {email}: {ex.Message}");
-            }
+            return new AccountDTO
+            {
+                AccountId = account.AccountId,
+                ClientId = account.ClientId,
+                Balance = account.Balance
+            };
         }
 
-        private void SendEmailRegisterNotification(string email)
+        // Пополнение счёта
+        public AccountDTO Deposit(int clientId, decimal amount)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                return;
+            var account = _accountRepository.GetByClientId(clientId);
 
-            try
-            {
-                EmailService.SendEmail(
-                    email,
-                    "Register Successful",
-                    $"You have successfully registered your account."
-                );
-            }
-            catch (Exception ex)
-            {
+            if (account == null)
+                throw new Exception("Account not found.");
 
-                Console.WriteLine($"[Warning] Failed to send email to {email}: {ex.Message}");
-            }
+            account.Deposit(amount);
+
+            _accountRepository.Update(account);
+
+            return new AccountDTO
+            {
+                AccountId = account.AccountId,
+                ClientId = account.ClientId,
+                Balance = account.Balance
+            };
         }
 
+        // Снятие денег
+        public AccountDTO Withdraw(int clientId, decimal amount)
+        {
+            var account = _accountRepository.GetByClientId(clientId);
 
+            if (account == null)
+                throw new Exception("Account not found.");
 
+            bool success = account.Withdraw(amount);
 
+            if (!success)
+                throw new Exception("Insufficient balance.");
 
+            _accountRepository.Update(account);
 
-
-
-
+            return new AccountDTO
+            {
+                AccountId = account.AccountId,
+                ClientId = account.ClientId,
+                Balance = account.Balance
+            };
+        }
     }
 }

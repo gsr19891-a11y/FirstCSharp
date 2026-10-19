@@ -1,4 +1,5 @@
 ﻿using BankATM.Core.Models.Entities;
+using Step.Domain.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,14 +8,18 @@ namespace BankATM.Core.Interfaces
 {
     public interface IUserRepository
     {
-        ICollection<User> GetAll();
-
         User? GetByUsername(string username);
 
         User? GetByEmail(string email);
 
-        void Add(User user);
+        User? GetById(int id);
 
-        void SaveAll(ICollection<User> users);
+        ICollection<User> GetAll();
+
+        void RegisterClient(ClientUser user);
+
+        void AddAdmin(AdminUser admin);
+
+        void Update(User user);
     }
 }

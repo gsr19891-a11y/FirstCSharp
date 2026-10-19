@@ -4,7 +4,10 @@ using System.Text;
 
 namespace BankATM.Core.Models.DTOs
 {
-    public class CreateUserDTO
+    public class WithdrawDTO
     {
+        public int ClientId { get; set; }
+
+        public decimal Amount { get; set; }
     }
 }

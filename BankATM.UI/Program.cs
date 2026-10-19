@@ -21,11 +21,24 @@ namespace BankATM.UI
 
             string connectionString = config.GetConnectionString("DefaultConnection");
 
-            IUserRepository repository = new UserRepository(connectionString);
+            var userRepository = new UserRepository(connectionString);
+            var accountRepository = new AccountRepository(connectionString);
+            var loanRepository = new LoanRepository(connectionString);
 
-            var bankService = new BankService(repository);
+            var bankService = new BankService(
+                userRepository,
+                accountRepository
+            );
 
-            var menuService = new MenuService(bankService);
+            var loanService = new LoanService(
+                loanRepository,
+                accountRepository
+            );
+
+            var menuService = new MenuService(
+                bankService,
+                loanService
+            );
 
             menuService.Run();
 

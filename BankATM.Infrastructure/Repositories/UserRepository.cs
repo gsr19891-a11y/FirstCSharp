@@ -1,11 +1,10 @@
-﻿using ATM.Core.Enums;
+﻿
+using ATM.Core.Enums;
 using BankATM.Core.Interfaces;
 using BankATM.Core.Models.Entities;
 using Microsoft.Data.SqlClient;
 using Step.Domain.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Data;
 
 namespace BankATM.Infrastructure.Repositories
 {
@@ -18,165 +17,394 @@ namespace BankATM.Infrastructure.Repositories
             _connectionString = connectionString;
         }
 
+        // =========================================
+        // REGISTER CLIENT
+        // =========================================
+
+        public void RegisterClient(ClientUser user)
+        {
+            const string query = @"
+                INSERT INTO Users
+                    (Username, Password, Email, IsVerified, VerificationCode)
+                VALUES
+                    (@Username, @Password, @Email, @IsVerified, @VerificationCode);
+
+                DECLARE @ClientId INT = SCOPE_IDENTITY();
+
+                INSERT INTO ClientUsers (UserId)
+                VALUES (@ClientId);
+
+                INSERT INTO Accounts (ClientId, Balance)
+                VALUES (@ClientId, 0.00);
+
+                SELECT @ClientId;
+            ";
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                using var command = new SqlCommand(query, connection, transaction);
+
+                command.Parameters.Add("@Username", SqlDbType.NVarChar, 50)
+                    .Value = user.Username;
+
+                command.Parameters.Add("@Password", SqlDbType.NVarChar, 255)
+                    .Value = user.Password;
+
+                command.Parameters.Add("@Email", SqlDbType.NVarChar, 100)
+                    .Value = user.Email;
+
+                command.Parameters.Add("@IsVerified", SqlDbType.Bit)
+                    .Value = user.IsVerified;
+
+                command.Parameters.Add("@VerificationCode", SqlDbType.NVarChar, 10)
+                    .Value = (object?)user.VerificationCode ?? DBNull.Value;
+
+                user.Id = Convert.ToInt32(command.ExecuteScalar());
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+        // =========================================
+        // ADD ADMIN
+        // =========================================
+
+        public void AddAdmin(AdminUser admin)
+        {
+            const string query = @"
+                INSERT INTO Users
+                    (Username, Password, Email, IsVerified, VerificationCode)
+                VALUES
+                    (@Username, @Password, @Email, @IsVerified, @VerificationCode);
+
+                DECLARE @AdminId INT = SCOPE_IDENTITY();
+
+                INSERT INTO AdminUsers (UserId)
+                VALUES (@AdminId);
+
+                SELECT @AdminId;
+            ";
+
+            using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                using var command = new SqlCommand(query, connection, transaction);
+
+                command.Parameters.Add("@Username", SqlDbType.NVarChar, 50)
+                    .Value = admin.Username;
+
+                command.Parameters.Add("@Password", SqlDbType.NVarChar, 255)
+                    .Value = admin.Password;
+
+                command.Parameters.Add("@Email", SqlDbType.NVarChar, 100)
+                    .Value = admin.Email;
+
+                command.Parameters.Add("@IsVerified", SqlDbType.Bit)
+                    .Value = admin.IsVerified;
+
+                command.Parameters.Add("@VerificationCode", SqlDbType.NVarChar, 10)
+                    .Value = (object?)admin.VerificationCode ?? DBNull.Value;
+
+                admin.Id = Convert.ToInt32(command.ExecuteScalar());
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+        // =========================================
+        // GET ALL USERS
+        // =========================================
+
         public ICollection<User> GetAll()
         {
-            List<User> users = new List<User>();
-            const string query = "SELECT Id, Username, Password, Email, Role, LoanStatus, LoanAmount, IsVerified, VerificationCode, Balance FROM Users";
+            const string query = @"
+                SELECT
+                    u.Id,
+                    u.Username,
+                    u.Password,
+                    u.Email,
+                    u.IsVerified,
+                    u.VerificationCode,
+
+                    CASE
+                        WHEN a.UserId IS NOT NULL THEN 1
+                        WHEN c.UserId IS NOT NULL THEN 0
+                    END AS Role
+
+                FROM Users u
+
+                LEFT JOIN ClientUsers c
+                    ON u.Id = c.UserId
+
+                LEFT JOIN AdminUsers a
+                    ON u.Id = a.UserId;
+            ";
+
+            var users = new List<User>();
 
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(query, connection);
+
             connection.Open();
 
             using var reader = command.ExecuteReader();
+
             while (reader.Read())
             {
-                int id = reader.GetInt32(reader.GetOrdinal("Id"));
-                string username = reader.GetString(reader.GetOrdinal("Username"));
-                string password = reader.GetString(reader.GetOrdinal("Password"));
-                string email = reader.GetString(reader.GetOrdinal("Email"));
-                UserRole role = (UserRole)reader.GetInt32(reader.GetOrdinal("Role"));
-                LoanStatus loanStatus = (LoanStatus)reader.GetInt32(reader.GetOrdinal("LoanStatus"));
-                decimal loanAmount = reader.GetDecimal(reader.GetOrdinal("LoanAmount"));
-                bool isVerified = reader.GetBoolean(reader.GetOrdinal("IsVerified"));
-
-
-                string verificationCode = reader.IsDBNull(reader.GetOrdinal("VerificationCode"))
-                    ? string.Empty
-                    : reader.GetString(reader.GetOrdinal("VerificationCode"));
-
-                decimal balance = reader.GetDecimal(reader.GetOrdinal("Balance"));
-
-                User user;
-                if (role == UserRole.Admin)
-                {
-                    user = new AdminUser(id, username, password, email, verificationCode, balance, loanStatus, loanAmount);
-                }
-                else
-                {
-                    user = new ClientUser(id, username, password, email, verificationCode, balance, loanStatus, loanAmount);
-                }
-
-                user.IsVerfyed = isVerified;
-                users.Add(user);
+                users.Add(MapUser(reader));
             }
+
             return users;
         }
 
+        // =========================================
+        // GET BY ID
+        // =========================================
 
-
-
-        public User? GetByUsername(string username)
-        {
-            return GetAll().FirstOrDefault(u =>
-                u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
-        }
-
-
-
-
-        public void Add(User user)
+        public User? GetById(int id)
         {
             const string query = @"
-        INSERT INTO Users
-        (
-            Username,
-            Password,
-            Email,
-            Role,
-            LoanStatus,
-            LoanAmount,
-            IsVerified,
-            VerificationCode,
-            Balance
-        )
-        OUTPUT INSERTED.Id
-        VALUES
-        (
-            @Username,
-            @Password,
-            @Email,
-            @Role,
-            @LoanStatus,
-            @LoanAmount,
-            @IsVerified,
-            @VerificationCode,
-            @Balance
-        );";
+                SELECT
+                    u.Id,
+                    u.Username,
+                    u.Password,
+                    u.Email,
+                    u.IsVerified,
+                    u.VerificationCode,
+
+                    CASE
+                        WHEN a.UserId IS NOT NULL THEN 1
+                        WHEN c.UserId IS NOT NULL THEN 0
+                    END AS Role
+
+                FROM Users u
+
+                LEFT JOIN ClientUsers c
+                    ON u.Id = c.UserId
+
+                LEFT JOIN AdminUsers a
+                    ON u.Id = a.UserId
+
+                WHERE u.Id = @Id;
+            ";
 
             using var connection = new SqlConnection(_connectionString);
             using var command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@Username", user.Username);
-            command.Parameters.AddWithValue("@Password", user.Password);
-            command.Parameters.AddWithValue("@Email", user.Email);
-            command.Parameters.AddWithValue("@Role", (int)user.Role);
-            command.Parameters.AddWithValue("@LoanStatus", (int)user.LoanStatus);
-            command.Parameters.AddWithValue("@LoanAmount", user.LoanAmount);
-            command.Parameters.AddWithValue("@IsVerified", user.IsVerfyed);
-            command.Parameters.AddWithValue(
-                "@VerificationCode",
-                (object?)user.VerificationCode ?? DBNull.Value
-            );
-            command.Parameters.AddWithValue("@Balance", user.Balance);
+            command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
             connection.Open();
 
-            user.Id = Convert.ToInt32(command.ExecuteScalar());
+            using var reader = command.ExecuteReader();
+
+            if (!reader.Read())
+                return null;
+
+            return MapUser(reader);
         }
 
+        // =========================================
+        // GET BY USERNAME
+        // =========================================
 
-        public void SaveAll(ICollection<User> users)
+        public User? GetByUsername(string username)
         {
-            const string updateQuery = @"
-        UPDATE Users 
-        SET Username = @Username, 
-            Password = @Password, 
-            Email = @Email, 
-            Role = @Role, 
-            LoanStatus = @LoanStatus, 
-            LoanAmount = @LoanAmount, 
-            IsVerified = @IsVerified, 
-            VerificationCode = @VerificationCode, 
-            Balance = @Balance 
-        WHERE Id = @Id";
+            const string query = @"
+                SELECT
+                    u.Id,
+                    u.Username,
+                    u.Password,
+                    u.Email,
+                    u.IsVerified,
+                    u.VerificationCode,
+
+                    CASE
+                        WHEN a.UserId IS NOT NULL THEN 1
+                        WHEN c.UserId IS NOT NULL THEN 0
+                    END AS Role
+
+                FROM Users u
+
+                LEFT JOIN ClientUsers c
+                    ON u.Id = c.UserId
+
+                LEFT JOIN AdminUsers a
+                    ON u.Id = a.UserId
+
+                WHERE u.Username = @Username;
+            ";
 
             using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            command.Parameters.Add("@Username", SqlDbType.NVarChar, 50)
+                .Value = username;
+
             connection.Open();
 
-            foreach (var user in users)
-            {
-                using var updateCommand = new SqlCommand(updateQuery, connection);
-                updateCommand.Parameters.AddWithValue("@Id", user.Id);
-                updateCommand.Parameters.AddWithValue("@Username", user.Username);
-                updateCommand.Parameters.AddWithValue("@Password", user.Password);
-                updateCommand.Parameters.AddWithValue("@Email", user.Email);
-                updateCommand.Parameters.AddWithValue("@Role", (int)user.Role);
-                updateCommand.Parameters.AddWithValue("@LoanStatus", (int)user.LoanStatus);
-                updateCommand.Parameters.AddWithValue("@LoanAmount", user.LoanAmount);
-                updateCommand.Parameters.AddWithValue("@IsVerified", user.IsVerfyed);
-                updateCommand.Parameters.AddWithValue("@VerificationCode", user.VerificationCode ?? (object)DBNull.Value);
-                updateCommand.Parameters.AddWithValue("@Balance", user.Balance);
+            using var reader = command.ExecuteReader();
 
-                updateCommand.ExecuteNonQuery();
-            }
+            if (!reader.Read())
+                return null;
+
+            return MapUser(reader);
         }
 
+        // =========================================
+        // GET BY EMAIL
+        // =========================================
 
         public User? GetByEmail(string email)
         {
-            return GetAll().FirstOrDefault(u =>
-                u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            const string query = @"
+                SELECT
+                    u.Id,
+                    u.Username,
+                    u.Password,
+                    u.Email,
+                    u.IsVerified,
+                    u.VerificationCode,
 
+                    CASE
+                        WHEN a.UserId IS NOT NULL THEN 1
+                        WHEN c.UserId IS NOT NULL THEN 0
+                    END AS Role
+
+                FROM Users u
+
+                LEFT JOIN ClientUsers c
+                    ON u.Id = c.UserId
+
+                LEFT JOIN AdminUsers a
+                    ON u.Id = a.UserId
+
+                WHERE u.Email = @Email;
+            ";
+
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
+
+            command.Parameters.Add("@Email", SqlDbType.NVarChar, 100)
+                .Value = email;
+
+            connection.Open();
+
+            using var reader = command.ExecuteReader();
+
+            if (!reader.Read())
+                return null;
+
+            return MapUser(reader);
         }
 
+        // =========================================
+        // UPDATE USER
+        // =========================================
 
+        public void Update(User user)
+        {
+            const string query = @"
+                UPDATE Users
+                SET
+                    Username = @Username,
+                    Password = @Password,
+                    Email = @Email,
+                    IsVerified = @IsVerified,
+                    VerificationCode = @VerificationCode
+                WHERE Id = @Id;
+            ";
 
+            using var connection = new SqlConnection(_connectionString);
+            using var command = new SqlCommand(query, connection);
 
+            command.Parameters.Add("@Id", SqlDbType.Int)
+                .Value = user.Id;
 
+            command.Parameters.Add("@Username", SqlDbType.NVarChar, 50)
+                .Value = user.Username;
 
+            command.Parameters.Add("@Password", SqlDbType.NVarChar, 255)
+                .Value = user.Password;
 
+            command.Parameters.Add("@Email", SqlDbType.NVarChar, 100)
+                .Value = user.Email;
 
+            command.Parameters.Add("@IsVerified", SqlDbType.Bit)
+                .Value = user.IsVerified;
 
+            command.Parameters.Add("@VerificationCode", SqlDbType.NVarChar, 10)
+                .Value = (object?)user.VerificationCode ?? DBNull.Value;
 
+            connection.Open();
+
+            int rows = command.ExecuteNonQuery();
+
+            if (rows == 0)
+                throw new Exception("User not found.");
+        }
+
+        // =========================================
+        // MAP USER
+        // =========================================
+
+        private static User MapUser(SqlDataReader reader)
+        {
+            int id = reader.GetInt32(reader.GetOrdinal("Id"));
+
+            string username = reader.GetString(reader.GetOrdinal("Username"));
+
+            string password = reader.GetString(reader.GetOrdinal("Password"));
+
+            string email = reader.GetString(reader.GetOrdinal("Email"));
+
+            bool isVerified = reader.GetBoolean(reader.GetOrdinal("IsVerified"));
+
+            string? verificationCode =
+                reader.IsDBNull(reader.GetOrdinal("VerificationCode"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("VerificationCode"));
+
+            UserRole role = (UserRole)reader.GetInt32(reader.GetOrdinal("Role"));
+
+            if (role == UserRole.Admin)
+            {
+                return new AdminUser(
+                    id,
+                    username,
+                    password,
+                    email,
+                    verificationCode,
+                    isVerified
+                );
+            }
+
+            return new ClientUser(
+                id,
+                username,
+                password,
+                email,
+                verificationCode,
+                isVerified
+            );
+        }
     }
 }

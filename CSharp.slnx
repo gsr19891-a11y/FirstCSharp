@@ -1,33 +1,39 @@
 <Solution>
   <Folder Name="/ADO.NET/">
-    <Project Path="Step.Application/Step.Application.csproj" Id="f547c9bd-f103-4248-ae15-e738a8ea51c6" />
-    <Project Path="Step.Domain/Step.Domain.csproj" Id="6871c487-f1c7-4e2e-baa3-0a55db4ce183" />
-    <Project Path="Step.Infrastructure/Step.Infrastructure.csproj" Id="5454ffbd-08f7-45cd-83ca-1004862fe719" />
-    <Project Path="Step.UI/Step.UI.csproj" Id="7c86357f-28db-44f4-9f6e-a436cfce22b3" />
+    <Project Path="../../../../../Desktop/C#/CSharp/Step.Application/Step.Application.csproj" Id="f547c9bd-f103-4248-ae15-e738a8ea51c6" />
+    <Project Path="../../../../../Desktop/C#/CSharp/Step.Domain/Step.Domain.csproj" Id="6871c487-f1c7-4e2e-baa3-0a55db4ce183" />
+    <Project Path="../../../../../Desktop/C#/CSharp/Step.Infrastructure/Step.Infrastructure.csproj" Id="5454ffbd-08f7-45cd-83ca-1004862fe719" />
+    <Project Path="../../../../../Desktop/C#/CSharp/Step.UI/Step.UI.csproj" Id="7c86357f-28db-44f4-9f6e-a436cfce22b3" />
   </Folder>
   <Folder Name="/ATM/">
-    <Project Path="ATM/ATM.Core/ATM.Core.csproj" />
-    <Project Path="ATM/ATM.Infrastructure/ATM.Infrastructure.csproj" />
-    <Project Path="ATM/ATM.Services/ATM.Services.csproj" />
-    <Project Path="ATM/ATM.UI/ATM.UI.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/ATM/ATM.Core/ATM.Core.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/ATM/ATM.Infrastructure/ATM.Infrastructure.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/ATM/ATM.Services/ATM.Services.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/ATM/ATM.UI/ATM.UI.csproj" />
   </Folder>
   <Folder Name="/BankATM/">
-    <Project Path="BankATM.Core/BankATM.Core.csproj" Id="5abfd4e8-06b9-4c18-b197-e1a6a64226d7" />
-    <Project Path="BankATM.Infrastructure/BankATM.Infrastructure.csproj" Id="afb96e01-1919-4ed3-b290-84b764dbebbc" />
-    <Project Path="BankATM.Services/BankATM.Services.csproj" Id="cffa37b8-ce61-42ab-90a6-4437f211fdfc" />
-    <Project Path="BankATM.UI/BankATM.UI.csproj" Id="43cc87fc-8e54-4270-804a-31c36411e949" />
+    <Project Path="BankATM.Core/BankATM.Core.csproj" />
+    <Project Path="BankATM.Infrastructure/BankATM.Infrastructure.csproj" />
+    <Project Path="BankATM.Services/BankATM.Services.csproj" />
+    <Project Path="BankATM.UI/BankATM.UI.csproj" />
   </Folder>
   <Folder Name="/L23_structure/">
-    <Project Path="L23.Core/L23.Core.csproj" />
-    <Project Path="L23.Infastructure/L23.Infastructure.csproj" />
-    <Project Path="L23.Services/L23.Services.csproj" />
-    <Project Path="L23.UI/L23.UI.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/L23.Core/L23.Core.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/L23.Infastructure/L23.Infastructure.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/L23.Services/L23.Services.csproj" />
+    <Project Path="../../../../../Desktop/C#/CSharp/L23.UI/L23.UI.csproj" />
   </Folder>
   <Folder Name="/LibrarySystem/">
-    <Project Path="LibrarySystem.Core/LibrarySystem.Core.csproj" Id="eaa5d8de-9a59-4ec3-a239-23d554d8a4b5" />
-    <Project Path="LibrarySystem.Infrastructure/LibrarySystem.Infrastructure.csproj" Id="75e72847-c7fd-4fc1-a23d-c50e4b5ae1cf" />
-    <Project Path="LibrarySystem.Services/LibrarySystem.Services.csproj" Id="088489ef-5f26-4e5c-8776-72c063f85ea7" />
-    <Project Path="LibrarySystem.UI/LibrarySystem.UI.csproj" Id="f32e5a1a-85b1-4b7d-ad6d-14b9c15ff2c3" />
+    <Project Path="../../../../../Desktop/C#/CSharp/LibrarySystem.Core/LibrarySystem.Core.csproj" Id="eaa5d8de-9a59-4ec3-a239-23d554d8a4b5" />
+    <Project Path="../../../../../Desktop/C#/CSharp/LibrarySystem.Infrastructure/LibrarySystem.Infrastructure.csproj" Id="75e72847-c7fd-4fc1-a23d-c50e4b5ae1cf" />
+    <Project Path="../../../../../Desktop/C#/CSharp/LibrarySystem.Services/LibrarySystem.Services.csproj" Id="088489ef-5f26-4e5c-8776-72c063f85ea7" />
+    <Project Path="../../../../../Desktop/C#/CSharp/LibrarySystem.UI/LibrarySystem.UI.csproj" Id="f32e5a1a-85b1-4b7d-ad6d-14b9c15ff2c3" />
   </Folder>
-  <Project Path="Lecture_Sect_1/Lecture_Sect_1.csproj" Id="b71251d6-d32f-4d92-8165-7fde6c73c6af" />
+  <Folder Name="/TechShop/">
+    <Project Path="../../../../../Desktop/C#/CSharp/TechShop.Core/TechShop.Core.csproj" Id="39640af9-d4dd-44d0-87cf-a523795552ab" />
+    <Project Path="../../../../../Desktop/C#/CSharp/TechShop.Infrastructures/TechShop.Infrastructures.csproj" Id="5b3d334e-3535-4b85-9647-43afcbdc801f" />
+    <Project Path="../../../../../Desktop/C#/CSharp/TechShop.Services/TechShop.Services.csproj" Id="843bc806-577b-4f37-b546-24e2fd5be08d" />
+    <Project Path="../../../../../Desktop/C#/CSharp/TechShop.UI/TechShop.UI.csproj" Id="78144cde-68ba-49a6-b110-1dd7a1d7ef8d" />
+  </Folder>
+  <Project Path="../../../../../Desktop/C#/CSharp/Lecture_Sect_1/Lecture_Sect_1.csproj" Id="b71251d6-d32f-4d92-8165-7fde6c73c6af" />
 </Solution>
