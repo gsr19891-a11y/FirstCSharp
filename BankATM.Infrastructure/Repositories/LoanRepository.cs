@@ -15,7 +15,7 @@ namespace BankATM.Infrastructure.Repositories
             _connectionString = connectionString;
         }
 
-        // Добавление заявки
+     
         public void Add(Loan loan)
         {
             using SqlConnection connection =
@@ -35,7 +35,6 @@ namespace BankATM.Infrastructure.Repositories
             command.ExecuteNonQuery();
         }
 
-        // Получение заявки по ID
         public Loan? GetById(int loanId)
         {
             using SqlConnection connection =
@@ -61,7 +60,7 @@ namespace BankATM.Infrastructure.Repositories
             return MapLoan(reader);
         }
 
-        // Получение всех заявок клиента
+
         public ICollection<Loan> GetByClientId(int clientId)
         {
             using SqlConnection connection =
@@ -92,7 +91,6 @@ namespace BankATM.Infrastructure.Repositories
             return loans;
         }
 
-        // Получение ожидающих заявок
         public ICollection<Loan> GetPendingLoans()
         {
             using SqlConnection connection =
@@ -124,7 +122,7 @@ namespace BankATM.Infrastructure.Repositories
             return loans;
         }
 
-        // Обновление заявки
+
         public void Update(Loan loan)
         {
             using SqlConnection connection =
@@ -150,7 +148,7 @@ namespace BankATM.Infrastructure.Repositories
                 throw new Exception("Loan not found.");
         }
 
-        // Преобразование SQL-строки в Loan
+       
         private Loan MapLoan(SqlDataReader reader)
         {
             return new Loan(

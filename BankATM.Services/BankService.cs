@@ -21,7 +21,6 @@ namespace BankATM.Services
             _accountRepository = accountRepository;
         }
 
-        // Регистрация клиента
         public UserDTO Register(RegisterUserDTO dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Username) ||
@@ -85,7 +84,6 @@ namespace BankATM.Services
         }
 
 
-        // Авторизация
         public UserDTO Login(LoginUserDTO dto)
         {
             var user = _userRepository.GetByUsername(dto.Username);
@@ -109,7 +107,7 @@ namespace BankATM.Services
             };
         }
 
-        // Подтверждение email
+     
         public void VerifyUser(int userId, string code)
         {
             var user = _userRepository.GetById(userId);
@@ -129,7 +127,7 @@ namespace BankATM.Services
             _userRepository.Update(user);
         }
 
-        // Получение счёта клиента
+  
         public AccountDTO GetAccount(int clientId)
         {
             var account = _accountRepository.GetByClientId(clientId);
@@ -145,7 +143,7 @@ namespace BankATM.Services
             };
         }
 
-        // Пополнение счёта
+
         public AccountDTO Deposit(int clientId, decimal amount)
         {
             var account = _accountRepository.GetByClientId(clientId);
@@ -165,7 +163,7 @@ namespace BankATM.Services
             };
         }
 
-        // Снятие денег
+
         public AccountDTO Withdraw(int clientId, decimal amount)
         {
             var account = _accountRepository.GetByClientId(clientId);

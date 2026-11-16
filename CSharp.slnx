@@ -17,6 +17,16 @@
     <Project Path="BankATM.Services/BankATM.Services.csproj" />
     <Project Path="BankATM.UI/BankATM.UI.csproj" />
   </Folder>
+  <Folder Name="/EFcore/">
+    <Project Path="Hotelapp/Hotelapp.csproj" Id="3f84fe7c-afdf-445d-b9df-e4e9b4cfaf9c" />
+  </Folder>
+  <Folder Name="/FitZoneApp/">
+    <Project Path="FitZone.Application/FitZone.Application.csproj" Id="b020691a-36ee-47ee-8cdd-6d317f4fb1d6" />
+    <Project Path="FitZone.Domain/FitZone.Domain.csproj" Id="f1ed2011-4070-4ea8-96f5-0e9e85bbd73e" />
+    <Project Path="FitZone.Infrastructure/FitZone.Infrastructure.csproj" Id="d480a2f1-2ccc-448a-b840-f7481334326d" />
+    <Project Path="FitZone.UI/FitZone.UI.csproj" Id="839204c4-1da6-4a1e-b87a-cf7d15d3bed5" />
+    <Project Path="FitZone.WebApp/FitZone.WebApp.csproj" Id="50e9281a-4c71-49de-b7e1-b9eec2934d04" />
+  </Folder>
   <Folder Name="/L23_structure/">
     <Project Path="../../../../../Desktop/C#/CSharp/L23.Core/L23.Core.csproj" />
     <Project Path="../../../../../Desktop/C#/CSharp/L23.Infastructure/L23.Infastructure.csproj" />
