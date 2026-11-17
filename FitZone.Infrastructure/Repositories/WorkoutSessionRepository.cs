@@ -1,9 +1,8 @@
-﻿using FitZone.Domain.Interfaces;
+﻿
+using FitZone.Domain.Interfaces;
 using FitZone.Domain.Models.Entities;
 using FitZone.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace FitZone.Infrastructure.Repositories
 {

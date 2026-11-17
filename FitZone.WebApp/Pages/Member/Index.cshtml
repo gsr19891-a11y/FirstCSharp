@@ -1,0 +1,14 @@
+﻿@page
+@model FitZone.WebApp.Pages.Member.IndexModel
+@{
+    ViewData["Title"] = "Members";
+}
+
+<h2>Members</h2>
+
+<ul>
+    @foreach(var member in Model.Members)
+    {
+        <li>@member.FirstName @member.LastName</li>
+    }
+</ul>

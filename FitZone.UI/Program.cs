@@ -1,11 +1,14 @@
-﻿using FitZone.Application.Services.Implementations;
+﻿
 using FitZone.Application.Services.Interfaces;
+using FitZone.Application.Services.Implementations;
 using FitZone.Domain.Interfaces;
 using FitZone.Infrastructure.Data;
 using FitZone.Infrastructure.Repositories;
+using FitZone.UI.Menus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace FitZone.UI
 {
@@ -13,70 +16,68 @@ namespace FitZone.UI
     {
         static void Main(string[] args)
         {
-            // DI Container Setup
             var services = new ServiceCollection();
 
             services.AddLogging();
 
             services.AddDbContext<FitZoneDbContext>(options =>
-                options.UseSqlServer("Server=ADMIN;Database=FitZoneAppDb;Trusted_Connection=True;TrustServerCertificate=True;"));
+                options.UseSqlServer(
+                    "Server=ADMIN;Database=FitZoneAppDb;Trusted_Connection=True;TrustServerCertificate=True;"));
 
-            // Repositories & Services Registration
+            // Repositories
             services.AddScoped<IMemberRepository, MemberRepository>();
-            services.AddScoped<IMemberService, MemberService>();
-
             services.AddScoped<IWorkoutSessionRepository, WorkoutSessionRepository>();
+            services.AddScoped<IGymHallRepository, GymHallRepository>();
+            services.AddScoped<ITrainerRepository, TrainerRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
+
+            // Services
+            services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IWorkoutSessionService, WorkoutSessionService>();
+            services.AddScoped<IGymHallService, GymHallService>();
+            services.AddScoped<ITrainerService, TrainerService>();
             services.AddScoped<IBookingService, BookingService>();
 
-            // UI Menus Registration
-            services.AddTransient<ClientMenu>();
-            services.AddTransient<AdminMenu>();
+            // AutoMapper
+            services.AddAutoMapper(cfg => { }, typeof(MemberService).Assembly);
 
-            // AutoMapper Configuration
-            services.AddAutoMapper(cfg =>
-            {
-                cfg.AddMaps(typeof(MemberService).Assembly);
-                cfg.AddMaps(typeof(Program).Assembly);
-            });
+            // Menus
+            services.AddTransient<AdminMenu>();
+            services.AddTransient<ClientMenu>();
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // Main Application Loop
-            bool programRunning = true;
-            while (programRunning)
+            using (var scope = serviceProvider.CreateScope())
             {
-                Console.Clear();
-                Console.WriteLine("=================================");
-                Console.WriteLine("       WELCOME TO FITZONE        ");
-                Console.WriteLine("=================================");
-                Console.WriteLine("1. Client Menu");
-                Console.WriteLine("2. Manager (Admin) Menu");
+                var adminMenu = scope.ServiceProvider
+                    .GetRequiredService<AdminMenu>();
+
+                var clientMenu = scope.ServiceProvider
+                    .GetRequiredService<ClientMenu>();
+
+                Console.WriteLine("=== FITZONE ===");
+                Console.WriteLine("1. Admin");
+                Console.WriteLine("2. Client");
                 Console.WriteLine("0. Exit");
-                Console.Write("\nSelect role: ");
+                Console.Write("Select option: ");
 
-                var mainChoice = Console.ReadLine();
+                string choice = Console.ReadLine();
 
-                switch (mainChoice)
+                switch (choice)
                 {
                     case "1":
-                        var clientMenu = serviceProvider.GetRequiredService<ClientMenu>();
-                        clientMenu.Show();
-                        break;
-
-                    case "2":
-                        var adminMenu = serviceProvider.GetRequiredService<AdminMenu>();
                         adminMenu.Show();
                         break;
 
+                    case "2":
+                        clientMenu.Show();
+                        break;
+
                     case "0":
-                        programRunning = false;
-                        Console.WriteLine("Goodbye!");
                         break;
 
                     default:
-                        Console.WriteLine("Invalid choice. Press any key to continue...");
-                        Console.ReadKey();
+                        Console.WriteLine("Invalid option!");
                         break;
                 }
             }

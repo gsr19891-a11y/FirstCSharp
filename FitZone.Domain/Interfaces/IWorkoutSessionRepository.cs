@@ -9,5 +9,6 @@ namespace FitZone.Domain.Interfaces
         WorkoutSession GetSessionById(int id);
         void AddSession(WorkoutSession session);
         void UpdateSession(WorkoutSession session);
+
     }
 }

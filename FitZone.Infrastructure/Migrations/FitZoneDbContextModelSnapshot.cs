@@ -52,6 +52,30 @@ namespace FitZone.Infrastructure.Migrations
                     b.ToTable("Bookings");
                 });
 
+            modelBuilder.Entity("FitZone.Domain.Models.Entities.GymHall", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GymHalls");
+                });
+
             modelBuilder.Entity("FitZone.Domain.Models.Entities.Member", b =>
                 {
                     b.Property<int>("Id")
@@ -59,6 +83,10 @@ namespace FitZone.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -70,6 +98,10 @@ namespace FitZone.Infrastructure.Migrations
 
                     b.Property<int>("MembershipTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -180,6 +212,9 @@ namespace FitZone.Infrastructure.Migrations
                     b.Property<int>("DurationMinutes")
                         .HasColumnType("int");
 
+                    b.Property<int>("GymHallId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
 
@@ -195,6 +230,8 @@ namespace FitZone.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GymHallId");
 
                     b.HasIndex("TrainerId");
 
@@ -258,11 +295,19 @@ namespace FitZone.Infrastructure.Migrations
 
             modelBuilder.Entity("FitZone.Domain.Models.Entities.WorkoutSession", b =>
                 {
+                    b.HasOne("FitZone.Domain.Models.Entities.GymHall", "GymHall")
+                        .WithMany()
+                        .HasForeignKey("GymHallId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FitZone.Domain.Models.Entities.Trainer", "Trainer")
                         .WithMany("WorkoutSessions")
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("GymHall");
 
                     b.Navigation("Trainer");
                 });

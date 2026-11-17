@@ -22,5 +22,8 @@ namespace FitZone.Domain.Models.Entities
         public string Status { get; set; } = "Active"; // Active / Cancelled
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+        public int GymHallId { get; set; }
+        public GymHall GymHall { get; set; } = null!;
     }
 }

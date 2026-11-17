@@ -25,29 +25,16 @@ namespace FitZone.Application.Services.Implementations
 
 
 
-       public void AddMember(CreateMemberDTO member)
+        public int AddMember(CreateMemberDTO memberDto)
         {
-         
-            //_memberRepository.AddMember(member);
+            var newMember = _mapper.Map<Member>(memberDto);
 
-            //manual mapping---------------------------
-            //var newMember = new Member();
-
-            //newMember.FirstName = member.FirstName;
-            //newMember.LastName = member.LastName;
-            //newMember.MembershipTypeId = member.MembershipTypeId;
-
-
-            //AutoMapper-------------------------------
-
-            var newMember = _mapper.Map<Member>(member);
-
+            newMember.PasswordHash =
+                BCrypt.Net.BCrypt.HashPassword(memberDto.Password);
 
             _memberRepository.AddMember(newMember);
 
-
-
-
+            return newMember.Id;
         }
 
 

@@ -12,7 +12,11 @@ namespace FitZone.Domain.Models.Entities
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
+
+        public string Email { get; set; }
         public int MembershipTypeId { get; set; }
+
+        public string PasswordHash { get; set; }
 
         public ICollection<Membership> Memberships { get; set; } = new List<Membership>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

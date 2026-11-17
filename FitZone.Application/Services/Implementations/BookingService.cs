@@ -1,5 +1,6 @@
 ﻿using FitZone.Application.Services.Interfaces;
 using FitZone.Domain.Interfaces;
+using FitZone.Domain.Models.Entities;
 using System;
 using System.Linq;
 
@@ -93,5 +94,16 @@ namespace FitZone.Application.Services.Implementations
             booking.Status = "Cancelled";
             _bookingRepository.UpdateBooking(booking);
         }
+
+
+        public List<Booking> GetMyBookings(int memberId)
+        {
+            if (memberId <= 0)
+                throw new Exception("Invalid member ID.");
+
+            return _bookingRepository
+                .GetBookingsByMemberId(memberId);
+        }
+
     }
 }

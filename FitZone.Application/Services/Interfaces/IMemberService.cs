@@ -7,11 +7,12 @@ namespace FitZone.Application.Services.Interfaces
 {
     public interface IMemberService
     {
+
         List<MemberDTO> GetAllMembers();
         MemberDTO GetMemberById(int Id);
 
 
-        void AddMember(CreateMemberDTO member);
+        int AddMember(CreateMemberDTO member);
         void UpdateMember(UpdateMemberDTO member);
         void DeleteMember(int Id);
     }
