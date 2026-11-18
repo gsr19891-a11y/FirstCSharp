@@ -1,14 +1,15 @@
 ﻿
-using FitZone.Application.Services.Interfaces;
+using AutoMapper;
 using FitZone.Application.Services.Implementations;
+using FitZone.Application.Services.Interfaces;
 using FitZone.Domain.Interfaces;
 using FitZone.Infrastructure.Data;
 using FitZone.Infrastructure.Repositories;
 using FitZone.UI.Menus;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using AutoMapper;
 
 namespace FitZone.UI
 {
@@ -16,9 +17,19 @@ namespace FitZone.UI
     {
         static void Main(string[] args)
         {
+
             var services = new ServiceCollection();
 
             services.AddLogging();
+
+            var configuration = new ConfigurationBuilder()
+
+.SetBasePath(AppContext.BaseDirectory)
+
+.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+
+.Build();
+
 
             services.AddDbContext<FitZoneDbContext>(options =>
                 options.UseSqlServer(
@@ -30,6 +41,7 @@ namespace FitZone.UI
             services.AddScoped<IGymHallRepository, GymHallRepository>();
             services.AddScoped<ITrainerRepository, TrainerRepository>();
             services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IMembershipRepository, MembershipRepository>();
 
             // Services
             services.AddScoped<IMemberService, MemberService>();
@@ -62,11 +74,20 @@ namespace FitZone.UI
                 Console.Write("Select option: ");
 
                 string choice = Console.ReadLine();
-
+                
                 switch (choice)
                 {
                     case "1":
-                        adminMenu.Show();
+
+                        string secretWord = Console.ReadLine();
+                        if (secretWord == configuration["AdminSecretWord"])
+                        {
+                            adminMenu.Show();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid secret word!");
+                        }
                         break;
 
                     case "2":

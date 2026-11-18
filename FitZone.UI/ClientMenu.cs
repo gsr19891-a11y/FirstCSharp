@@ -24,9 +24,7 @@ namespace FitZone.UI
 
         public void Show()
         {
-            Console.Write("Enter your Member ID (0 if you are new): ");
-
-            int.TryParse(Console.ReadLine(), out int memberId);
+            int memberId = 0;
 
             bool exit = false;
 
@@ -35,14 +33,23 @@ namespace FitZone.UI
                 Console.Clear();
 
                 Console.WriteLine("=== FITZONE CLIENT MENU ===");
-                Console.WriteLine($"Member ID: {memberId}");
+                if (memberId > 0)
+                {
+                    Console.WriteLine($"Logged in | Member ID: {memberId}");
+                }
+                else
+                {
+                    Console.WriteLine("Not logged in");
+                }
                 Console.WriteLine("--------------------------------");
                 Console.WriteLine("1. Register new member");
-                Console.WriteLine("2. View available workout sessions");
-                Console.WriteLine("3. Book a workout session");
-                Console.WriteLine("4. View my bookings");
-                Console.WriteLine("5. Cancel booking");
-                Console.WriteLine("6. View my profile");
+                Console.WriteLine("2. Login");
+                Console.WriteLine("3. View available workout sessions");
+                Console.WriteLine("4. Book a workout session");
+                Console.WriteLine("5. View my bookings");
+                Console.WriteLine("6. Cancel booking");
+                Console.WriteLine("7. View my profile");
+                Console.WriteLine("8. Logout");
                 Console.WriteLine("0. Back to Main Menu");
 
                 Console.Write("\nSelect an option: ");
@@ -54,31 +61,47 @@ namespace FitZone.UI
                     switch (choice)
                     {
                         case "1":
-                            memberId = RegisterMember();
+                            RegisterMember();
                             break;
 
                         case "2":
-                            ViewAvailableSessions();
+                            memberId = LoginMember();
                             break;
 
                         case "3":
-                            if (CheckMember(memberId))
-                                BookSession(memberId);
+                            ViewAvailableSessions();
                             break;
 
                         case "4":
                             if (CheckMember(memberId))
-                                ViewMyBookings(memberId);
+                                BookSession(memberId);
                             break;
 
                         case "5":
                             if (CheckMember(memberId))
-                                CancelBooking(memberId);
+                                ViewMyBookings(memberId);
                             break;
 
                         case "6":
                             if (CheckMember(memberId))
+                                CancelBooking(memberId);
+                            break;
+
+                        case "7":
+                            if (CheckMember(memberId))
                                 ViewProfile(memberId);
+                            break;
+
+                        case "8":
+                            if (memberId > 0)
+                            {
+                                memberId = 0;
+                                Console.WriteLine("\nYou have successfully logged out!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nYou are not logged in.");
+                            }
                             break;
 
                         case "0":
@@ -128,42 +151,53 @@ namespace FitZone.UI
             return true;
         }
 
-        private int RegisterMember()
+
+        private void RegisterMember()
         {
             Console.Clear();
 
             Console.WriteLine("=== MEMBER REGISTRATION ===");
 
             Console.Write("First Name: ");
-            string firstName = Console.ReadLine();
+            string firstName = Console.ReadLine() ?? "";
 
             Console.Write("Last Name: ");
-            string lastName = Console.ReadLine();
+            string lastName = Console.ReadLine() ?? "";
 
             Console.Write("Email: ");
-            string email = Console.ReadLine();
+            string email = Console.ReadLine() ?? "";
 
             Console.Write("Password: ");
-            string password = Console.ReadLine();
+            string password = Console.ReadLine() ?? "";
 
-            var member = new CreateMemberDTO
+            Console.WriteLine("\n=== CHOOSE MEMBERSHIP ===");
+
+            Console.WriteLine("1. Basic - 12 visits / 30 days");
+            Console.WriteLine("2. Premium - Unlimited / 30 days");
+
+            Console.Write("Choose membership: ");
+
+            int.TryParse(Console.ReadLine(), out int membershipTypeId);
+
+            var newMember = new CreateMemberDTO
             {
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
+                FirstName = firstName.Trim(),
+                LastName = lastName.Trim(),
+                Email = email.Trim(),
                 Password = password,
-                MembershipTypeId = 1
+                MembershipTypeId = membershipTypeId
             };
 
-            int newMemberId = _memberService.AddMember(member);
+            int memberId = _memberService.AddMember(newMember);
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\nRegistration successful!");
-            Console.WriteLine($"Your Member ID: {newMemberId}");
-            Console.ResetColor();
 
-            return newMemberId;
+            Console.WriteLine("\nRegistration successful!");
+            Console.WriteLine($"Your Member ID: {memberId}");
+
+            Console.ResetColor();
         }
+
 
         private void ViewAvailableSessions()
         {
@@ -286,5 +320,45 @@ namespace FitZone.UI
             Console.WriteLine($"Last Name: {member.LastName}");
             Console.WriteLine($"Membership Type ID: {member.MembershipTypeId}");
         }
+
+
+
+
+
+        private int LoginMember()
+        {
+            Console.Clear();
+
+            Console.WriteLine("=== MEMBER LOGIN ===");
+
+            Console.Write("Email: ");
+            string email = Console.ReadLine() ?? "";
+
+            Console.Write("Password: ");
+            string password = Console.ReadLine() ?? "";
+
+            var member = _memberService.Login(email, password);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            Console.WriteLine("\nLogin successful!");
+            Console.WriteLine($"Welcome, {member.FirstName} {member.LastName}!");
+            Console.WriteLine($"Member ID: {member.Id}");
+
+            Console.ResetColor();
+
+            return member.Id;
+        }
+
+
+
+
+
+
+
+
+
+
+
     }
 }

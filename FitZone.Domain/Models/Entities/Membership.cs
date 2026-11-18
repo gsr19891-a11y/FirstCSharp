@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FitZone.Domain.Models.Entities
@@ -11,23 +12,24 @@ namespace FitZone.Domain.Models.Entities
         public Member Member { get; set; } = null!;
 
         [Required]
-        public string Type { get; set; } = string.Empty; // Basic / Premium
+        public string Type { get; set; } = string.Empty;
 
         public DateTime StartDate { get; set; }
+
         public DateTime EndDate { get; set; }
+
+        // -1 means unlimited
         public int RemainingVisits { get; set; }
 
         [Required]
-        public string Status { get; set; } = "Active"; // Active / Expired
+        public string Status { get; set; } = "Active";
     }
 
     public class BasicMembership : Membership
     {
-        // Специфичная логика или свойства для базового абонемента
     }
 
     public class PremiumMembership : Membership
     {
-        // Специфичная логика или свойства для премиум абонемента
     }
 }

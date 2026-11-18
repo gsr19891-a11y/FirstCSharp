@@ -5,6 +5,7 @@ using FitZone.Domain.Models.DTOs.MembersDTOs;
 using FitZone.Domain.Models.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FitZone.Application.Services.Implementations
@@ -15,9 +16,15 @@ namespace FitZone.Application.Services.Implementations
         private readonly IMemberRepository _memberRepository;
         private readonly IMapper _mapper;
 
-        public MemberService(IMemberRepository memberRepository, IMapper mapper)
+        private readonly IMembershipRepository _membershipRepository;
+
+        public MemberService(
+    IMemberRepository memberRepository,
+    IMembershipRepository membershipRepository,
+    IMapper mapper)
         {
             _memberRepository = memberRepository;
+            _membershipRepository = membershipRepository;
             _mapper = mapper;
         }
 
@@ -25,8 +32,16 @@ namespace FitZone.Application.Services.Implementations
 
 
 
+
         public int AddMember(CreateMemberDTO memberDto)
         {
+            if (memberDto == null)
+                throw new Exception("Member cannot be null.");
+
+            if (memberDto.MembershipTypeId != 1 &&
+                memberDto.MembershipTypeId != 2)
+                throw new Exception("Invalid membership type.");
+
             var newMember = _mapper.Map<Member>(memberDto);
 
             newMember.PasswordHash =
@@ -34,8 +49,35 @@ namespace FitZone.Application.Services.Implementations
 
             _memberRepository.AddMember(newMember);
 
+            Membership membership;
+
+            if (memberDto.MembershipTypeId == 1)
+            {
+                membership = new BasicMembership
+                {
+                    Type = "Basic",
+                    RemainingVisits = 12
+                };
+            }
+            else
+            {
+                membership = new PremiumMembership
+                {
+                    Type = "Premium",
+                    RemainingVisits = -1
+                };
+            }
+
+            membership.MemberId = newMember.Id;
+            membership.StartDate = DateTime.Now;
+            membership.EndDate = DateTime.Now.AddDays(30);
+            membership.Status = "Active";
+
+            _membershipRepository.AddMembership(membership);
+
             return newMember.Id;
         }
+
 
 
         public void DeleteMember(int Id)
@@ -92,6 +134,32 @@ namespace FitZone.Application.Services.Implementations
             var memberDTO = _mapper.Map<MemberDTO>(memb);
             return memberDTO;
         }
+
+
+
+
+        public MemberDTO Login(string email, string password)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new Exception("Email is required.");
+
+            if (string.IsNullOrWhiteSpace(password))
+                throw new Exception("Password is required.");
+
+            var member = _memberRepository.GetMemberByEmail(email.Trim());
+
+            if (member == null)
+                throw new Exception("Member with this email does not exist.");
+
+            bool isPasswordCorrect =
+                BCrypt.Net.BCrypt.Verify(password, member.PasswordHash);
+
+            if (!isPasswordCorrect)
+                throw new Exception("Incorrect password.");
+
+            return _mapper.Map<MemberDTO>(member);
+        }
+
 
 
 

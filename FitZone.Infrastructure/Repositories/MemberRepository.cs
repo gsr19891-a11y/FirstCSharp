@@ -39,6 +39,12 @@ namespace FitZone.Infrastructure.Repositories
             return _context.Members.Find(Id);
         }
 
+        public Member GetMemberByEmail(string email)
+        {
+            return _context.Members
+                .FirstOrDefault(m => m.Email == email);
+        }
+
         public void UpdateMember(Member member)
         {
             var memberOld = _context.Members.Find(member.Id);
